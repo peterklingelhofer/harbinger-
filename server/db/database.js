@@ -122,7 +122,7 @@ const Review = db.define('Review', {
   dislike: {
     type: Sequelize.INTEGER,
   },
-  id_user: {
+  UserId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
@@ -170,7 +170,9 @@ const Keyword = db.define('Keyword', {
 Keyword.sync();
 
 // TESTING TO SEE IF I CAN FIX DB LINKS
-Review.belongsTo(Users, { foreignKey: 'id_user' });
+Users.hasMany(Review, { as: 'reviews' });
+Review.belongsTo(Users, { foreignKey: 'UserId' });
+db.sync();
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
   if (data === null) {
@@ -257,7 +259,7 @@ const saveReview = (username, title, text, weburl, keyword) => {
           return Review.create({
             likes: 0,
             dislike: 0,
-            id_user: idUser,
+            UserId: idUser,
             title,
             text,
             id_web: idWeb,
@@ -278,50 +280,53 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
   .then((data) => data)
   .catch((err) => console.log(err));
 
-const findTopReviews = (query) => {
-  const sendArr = [];
-  let userIds;
-  const usernames = [];
-  let webIds;
-  const webUrls = [];
-  const images = [];
-
-  return Review.findAll(query).then((data) => {
-    sortedData = data.sort((a, b) => b.likes - a.likes);
-    sendArr.push(data);
-    userIds = data.map((review) => review.dataValues.id_user);
-    webIds = data.map((review) => review.dataValues.id_web);
-    return Users.findAll({
-      where: {
-        id: userIds,
-      },
-    }).then((data) => {
-      userIds.forEach((userId) => {
-        data.forEach((userObj) => {
-          if (userObj.dataValues.id === userId) {
-            usernames.push(userObj.dataValues.username);
-            images.push(userObj.dataValues.image);
-          }
-        });
-      });
-      return WebUrls.findAll({
-        where: {
-          id: webIds,
-        },
-      }).then((data) => {
-        webIds.forEach((webId) => {
-          data.forEach((webObj) => {
-            if (webObj.dataValues.id === webId) {
-              webUrls.push(webObj.dataValues.url);
-            }
-          });
-        });
-        console.log(webUrls);
-        return [usernames, ...sendArr, webUrls, images];
-      });
+const findTopReviews = (tag) => new Promise((resolve, reject) => {
+  Review.findAll()
+    .then((data) => {
+      return new Promise.all(data.map(item => item.getUsers()));
+    })
+    .then((data) => {
+      resolve(data);
+    })
+    .catch((err) => {
+      reject(err);
     });
-  });
-};
+  // Review.findAll().then((data) => {
+  // sortedData = data.sort((a, b) => b.likes - a.likes);
+  // sendArr.push(data);
+  // userIds = data.map((review) => review.dataValues.id_user);
+  // webIds = data.map((review) => review.dataValues.id_web);
+  //   return Users.findAll({
+  //     where: {
+  //       id: userIds,
+  //     },
+  //   }).then((data) => {
+  //     userIds.forEach((userId) => {
+  //       data.forEach((userObj) => {
+  //         if (userObj.dataValues.id === userId) {
+  //           usernames.push(userObj.dataValues.username);
+  //           images.push(userObj.dataValues.image);
+  //         }
+  //       });
+  //     });
+  //     return WebUrls.findAll({
+  //       where: {
+  //         id: webIds,
+  //       },
+  //     }).then((data) => {
+  //       webIds.forEach((webId) => {
+  //         data.forEach((webObj) => {
+  //           if (webObj.dataValues.id === webId) {
+  //             webUrls.push(webObj.dataValues.url);
+  //           }
+  //         });
+  //       });
+  //       console.log(webUrls);
+  //       return [usernames, ...sendArr, webUrls, images];
+  //     });
+  //   });
+  // });
+});
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
   Review.findOne({ where: { id: reviewId } })

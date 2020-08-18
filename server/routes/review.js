@@ -9,6 +9,7 @@ const {
   saveOrFindWebUrl,
   saveOrFindKeyWord,
 } = require('../db/database');
+const { rest } = require('lodash');
 
 const reviewRoute = Router();
 let changer = '';
@@ -32,13 +33,15 @@ reviewRoute.post('/url', (req, res) => {
   res.end();
 });
 
-reviewRoute.get('/retrieve/:id', (req, res) => {
-  if (req.params.id === 'id=top') {
-    findTopReviews({ limit: 10 }).then((data) => {
-      res.status(200);
-      res.send(data);
+// Tag is the tag to search by, nothing returns all reviews sorted by likes
+reviewRoute.get('/retrieve/:tag', (req, res) => {
+  const { tag } = req.params;
+  findTopReviews(tag).then((data) => {
+    res.status(200).send(data);
+  })
+    .catch((err) => {
+      res.status(500).send(err);
     });
-  }
 });
 
 reviewRoute.post('/retrieve', (req, res) => {

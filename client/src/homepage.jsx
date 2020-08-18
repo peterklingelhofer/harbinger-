@@ -44,7 +44,7 @@ function HomePage() {
     color: 'black',
   });
 
-  
+
   const LikeBG = styled(Box)({
     borderRadius: 3,
     height: 200,
@@ -81,7 +81,7 @@ function HomePage() {
   const [topReviews, setTop] = useState([]);
 
   useEffect(() => {
-    axios.get('/review/retrieve/id=top').then((reviews) => {
+    axios.get('/review/retrieve').then((reviews) => {
       console.log(reviews.data, 'Top');
       const topArray = [];
       reviews.data[1].forEach((review, index) => {
@@ -96,12 +96,12 @@ function HomePage() {
 
   const [bottomReviews, setBottom] = useState([]);
 
-  useEffect(() => {
-    axios.get('/review/retrieve/id=bottom').then((data) => {
-      //console.log(data);
-      setBottom(data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('/review/retrieve/id=bottom').then((data) => {
+  //     //console.log(data);
+  //     setBottom(data);
+  //   });
+  // }, []);
 
   const updateLike = (reviewId, type) => {
     //console.log(reviewId, type);
@@ -124,28 +124,28 @@ function HomePage() {
     <div>
       <div>
         <Background>
-          <img src="https://i.redd.it/t2a08le9jzd11.png" width="10%" height="10%" style={{ filter: 'hue-rotate(300deg)', opacity: '50%' } }></img>
-        <h2
-          style={{
-            display: 'inline-block',
-            color: 'white',
-            position: 'absolute',
-            marginLeft: '60px'
-          }}
-        >
-          Harbinger
+          <img src="https://i.redd.it/t2a08le9jzd11.png" width="10%" height="10%" style={{ filter: 'hue-rotate(300deg)', opacity: '50%' }}></img>
+          <h2
+            style={{
+              display: 'inline-block',
+              color: 'white',
+              position: 'absolute',
+              marginLeft: '60px'
+            }}
+          >
+            Harbinger
         </h2>
-        <img
-          src={user.image}
-          width='50px'
-          height='50px'
-          style={{
-            display: 'inline-block',
-            marginLeft: '800px',
-            borderRadius: '50%',
-            verticalAlign: 'middle',
-          }}
-        />
+          <img
+            src={user.image}
+            width='50px'
+            height='50px'
+            style={{
+              display: 'inline-block',
+              marginLeft: '800px',
+              borderRadius: '50%',
+              verticalAlign: 'middle',
+            }}
+          />
           <Link to='/me'>
             <h2
               style={{
@@ -164,80 +164,80 @@ function HomePage() {
         </Background>
       </div>
       <Search />
-      <Background style={{ color:"white", marginLeft: "600px" }}>
+      <Background style={{ color: "white", marginLeft: "600px" }}>
         <h2>Top Best Reviews</h2>
       </Background>
       {topReviews.map((review) => {
         let count = 0;
         return (
           <div>
-          <ImageBG width="200">
-          <div >
-          <img src={review.image} style={{ position: 'absolute', marginBottom: "20px", boxShadow: '0 3px 10px 2px gray', }} width='150px'
-        height='150px'/>
-          <TitleBox>
-          <h1 style={{ marginLeft: "200px", padding: "0px", color: "white"}}>{review.title}</h1>
-          </TitleBox>
-          {/* <h4 style={{ marginLeft: "170px", padding: "0px"}}> Written By: {review.username}</h4> */}
-          <Link
-        to={{
-          pathname: `/userProfile/name=${review.username}`,
-        }}
-        ><h4 style={{ marginLeft: "170px", padding: "0px"}}>
-          {review.username || 'Jim'}
+            <ImageBG width="200">
+              <div >
+                <img src={review.image} style={{ position: 'absolute', marginBottom: "20px", boxShadow: '0 3px 10px 2px gray', }} width='150px'
+                  height='150px' />
+                <TitleBox>
+                  <h1 style={{ marginLeft: "200px", padding: "0px", color: "white" }}>{review.title}</h1>
+                </TitleBox>
+                {/* <h4 style={{ marginLeft: "170px", padding: "0px"}}> Written By: {review.username}</h4> */}
+                <Link
+                  to={{
+                    pathname: `/userProfile/name=${review.username}`,
+                  }}
+                ><h4 style={{ marginLeft: "170px", padding: "0px" }}>
+                    {review.username || 'Jim'}
             's Profile
       </h4>
-      </Link>
-          <a href={review.webUrl} style={{ marginLeft: "170px", padding: "0px"}}>{review.webUrl}</a>
-          <div style={{ padding: "20px"}}>
-          <div style={{ display: 'inline-block', marginLeft: "20px" }}>
-          <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-          <h4 style={{ }}>
-            Likes:
+                </Link>
+                <a href={review.webUrl} style={{ marginLeft: "170px", padding: "0px" }}>{review.webUrl}</a>
+                <div style={{ padding: "20px" }}>
+                  <div style={{ display: 'inline-block', marginLeft: "20px" }}>
+                    <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
+                      <h4 style={{}}>
+                        Likes:
           {review.likes}
-          </h4>
-          </LikeBG>
-          <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-          <h4>
-            {' '}
+                      </h4>
+                    </LikeBG>
+                    <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
+                      <h4>
+                        {' '}
           Dislikes:
           {review.dislike}
-          </h4>
-          </DikeBG>
-          </div>
-          <div style={{ maxWidth: "700px", marginLeft: "50px", marginBottom: "30px", positon: "absolute", padding: "12px", display: 'inline-block' }}>{review.text}</div>
-          </div>
-          <img height="10" style={{marginTop: "20px"}}></img>
-          </div>
-          </ImageBG>
-          <button
-            type="submit"
-            onClick={() => {
-              if (count === 0) {
-                updateLike(review.id, 'like');
-                count = +1;
-              };
+                      </h4>
+                    </DikeBG>
+                  </div>
+                  <div style={{ maxWidth: "700px", marginLeft: "50px", marginBottom: "30px", positon: "absolute", padding: "12px", display: 'inline-block' }}>{review.text}</div>
+                </div>
+                <img height="10" style={{ marginTop: "20px" }}></img>
+              </div>
+            </ImageBG>
+            <button
+              type="submit"
+              onClick={() => {
+                if (count === 0) {
+                  updateLike(review.id, 'like');
+                  count = +1;
+                };
 
-            }}
-          >
-            <MyButton>
-            like
+              }}
+            >
+              <MyButton>
+                like
             </MyButton>
-        </button>
-          <button
-            type="submit"
-            onClick={() => {
-              if (count === 0) {
-                updateLike(review.id, 'dislike');
-                count = +1;
-              };
+            </button>
+            <button
+              type="submit"
+              onClick={() => {
+                if (count === 0) {
+                  updateLike(review.id, 'dislike');
+                  count = +1;
+                };
 
-            }}
-          ><MyButton>
-            dislike
+              }}
+            ><MyButton>
+                dislike
           </MyButton>
-        </button>
-        </div>
+            </button>
+          </div>
         )
       })}
       {/* <h3 style={{ display: 'inline-block', textAlign: 'right' }}>
