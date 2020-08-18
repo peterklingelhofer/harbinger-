@@ -283,9 +283,8 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
 
 /**
  * Database helper to find the reviews joins with User and WebUrl
- * @param {String} tag tag to search by, not currently used
  */
-const findTopReviews = (tag) => new Promise((resolve, reject) => {
+const findTopReviews = () => new Promise((resolve, reject) => {
   Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }] })
     .then((data) => {
       resolve(data);

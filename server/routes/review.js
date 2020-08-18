@@ -45,15 +45,13 @@ reviewRoute.get('/retrieve/:tag', (req, res) => {
     });
 });
 
-reviewRoute.post('/retrieve', (req, res) => {
-  // this is the route that will retrieve a specific review based on user input
-  if (req.user) {
-    res.status(201);
-    res.send('review POST');
-  } else {
-    res.status(401);
-    res.send('unauthorized');
-  }
+reviewRoute.get('/retrieve', (req, res) => {
+  findTopReviews().then((data) => {
+    res.status(200).send(data);
+  })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 reviewRoute.post('/submit', (req, res) => {

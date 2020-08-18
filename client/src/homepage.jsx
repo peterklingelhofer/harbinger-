@@ -4,13 +4,13 @@ import {
   BrowserRouter as Router, Switch, Route, Link,
 } from 'react-router-dom';
 
-import Search from './search.jsx';
 import { styled, Backdrop } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
 import { useForm } from 'react-hook-form';
-
+import Search from './search.jsx';
+import ReviewList from './ReviewList.jsx';
 
 function HomePage() {
   const [user, setUser] = useState([]);
@@ -167,82 +167,7 @@ function HomePage() {
       <Background style={{ color: "white", marginLeft: "600px" }}>
         <h2>Top Best Reviews</h2>
       </Background>
-      {topReviews.map((review) => {
-        let count = 0;
-        return (
-          <div>
-            <ImageBG width="200">
-              <div >
-                <img src={review.image} style={{ position: 'absolute', marginBottom: "20px", boxShadow: '0 3px 10px 2px gray', }} width='150px'
-                  height='150px' />
-                <TitleBox>
-                  <h1 style={{ marginLeft: "200px", padding: "0px", color: "white" }}>{review.title}</h1>
-                </TitleBox>
-                {/* <h4 style={{ marginLeft: "170px", padding: "0px"}}> Written By: {review.username}</h4> */}
-                <Link
-                  to={{
-                    pathname: `/userProfile/name=${review.username}`,
-                  }}
-                ><h4 style={{ marginLeft: "170px", padding: "0px" }}>
-                    {review.username || 'Jim'}
-            's Profile
-      </h4>
-                </Link>
-                <a href={review.webUrl} style={{ marginLeft: "170px", padding: "0px" }}>{review.webUrl}</a>
-                <div style={{ padding: "20px" }}>
-                  <div style={{ display: 'inline-block', marginLeft: "20px" }}>
-                    <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-                      <h4 style={{}}>
-                        Likes:
-          {review.likes}
-                      </h4>
-                    </LikeBG>
-                    <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-                      <h4>
-                        {' '}
-          Dislikes:
-          {review.dislike}
-                      </h4>
-                    </DikeBG>
-                  </div>
-                  <div style={{ maxWidth: "700px", marginLeft: "50px", marginBottom: "30px", positon: "absolute", padding: "12px", display: 'inline-block' }}>{review.text}</div>
-                </div>
-                <img height="10" style={{ marginTop: "20px" }}></img>
-              </div>
-            </ImageBG>
-            <button
-              type="submit"
-              onClick={() => {
-                if (count === 0) {
-                  updateLike(review.id, 'like');
-                  count = +1;
-                };
-
-              }}
-            >
-              <MyButton>
-                like
-            </MyButton>
-            </button>
-            <button
-              type="submit"
-              onClick={() => {
-                if (count === 0) {
-                  updateLike(review.id, 'dislike');
-                  count = +1;
-                };
-
-              }}
-            ><MyButton>
-                dislike
-          </MyButton>
-            </button>
-          </div>
-        )
-      })}
-      {/* <h3 style={{ display: 'inline-block', textAlign: 'right' }}>
-        Top Worst Reviews
-      </h3> */}
+      <ReviewList />
     </div>
   );
 }
