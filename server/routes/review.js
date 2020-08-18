@@ -34,6 +34,7 @@ reviewRoute.post('/url', (req, res) => {
 });
 
 // Tag is the tag to search by, nothing returns all reviews sorted by likes
+// returns an array of Reviews, each with a User and a WebUrl
 reviewRoute.get('/retrieve/:tag', (req, res) => {
   const { tag } = req.params;
   findTopReviews(tag).then((data) => {

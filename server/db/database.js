@@ -122,14 +122,14 @@ const Review = db.define('Review', {
   dislike: {
     type: Sequelize.INTEGER,
   },
+  text: {
+    type: Sequelize.STRING(2020),
+  },
   UserId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
-  text: {
-    type: Sequelize.STRING(2020),
-  },
-  id_web: {
+  WebUrlId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
@@ -170,8 +170,8 @@ const Keyword = db.define('Keyword', {
 Keyword.sync();
 
 // TESTING TO SEE IF I CAN FIX DB LINKS
-Users.hasMany(Review, { as: 'reviews' });
-Review.belongsTo(Users, { foreignKey: 'UserId' });
+Review.belongsTo(Users, { as: 'User', constraints: false });
+Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 db.sync();
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
@@ -262,7 +262,7 @@ const saveReview = (username, title, text, weburl, keyword) => {
             UserId: idUser,
             title,
             text,
-            id_web: idWeb,
+            WebUrlId: idWeb,
             date: new Date(),
           }).then((data) => resolve(data));
         });
@@ -280,52 +280,19 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
   .then((data) => data)
   .catch((err) => console.log(err));
 
+
+/**
+ * Database helper to find the reviews joins with User and WebUrl
+ * @param {String} tag tag to search by, not currently used
+ */
 const findTopReviews = (tag) => new Promise((resolve, reject) => {
-  Review.findAll()
-    .then((data) => {
-      return new Promise.all(data.map(item => item.getUsers()));
-    })
+  Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }] })
     .then((data) => {
       resolve(data);
     })
     .catch((err) => {
       reject(err);
     });
-  // Review.findAll().then((data) => {
-  // sortedData = data.sort((a, b) => b.likes - a.likes);
-  // sendArr.push(data);
-  // userIds = data.map((review) => review.dataValues.id_user);
-  // webIds = data.map((review) => review.dataValues.id_web);
-  //   return Users.findAll({
-  //     where: {
-  //       id: userIds,
-  //     },
-  //   }).then((data) => {
-  //     userIds.forEach((userId) => {
-  //       data.forEach((userObj) => {
-  //         if (userObj.dataValues.id === userId) {
-  //           usernames.push(userObj.dataValues.username);
-  //           images.push(userObj.dataValues.image);
-  //         }
-  //       });
-  //     });
-  //     return WebUrls.findAll({
-  //       where: {
-  //         id: webIds,
-  //       },
-  //     }).then((data) => {
-  //       webIds.forEach((webId) => {
-  //         data.forEach((webObj) => {
-  //           if (webObj.dataValues.id === webId) {
-  //             webUrls.push(webObj.dataValues.url);
-  //           }
-  //         });
-  //       });
-  //       console.log(webUrls);
-  //       return [usernames, ...sendArr, webUrls, images];
-  //     });
-  //   });
-  // });
 });
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
