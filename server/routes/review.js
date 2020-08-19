@@ -63,7 +63,7 @@ reviewRoute.get('/retrieve', (req, res) => {
  * @returns {String} the url to the uploaded file
  */
 reviewRoute.post('/upload', (req, res) => {
-  if (!req.user) {
+  if (req.user) {
     const fileToUpload = req.file;
     uploadImage(fileToUpload)
       .then((url) => {

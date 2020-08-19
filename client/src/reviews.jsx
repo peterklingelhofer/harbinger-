@@ -118,24 +118,32 @@ function Reviews(props) {
   // Submits a review
   const onSubmit = (data) => {
     const formData = new FormData();
-    // formData.append('file', file)
-    // axios({
-    //   method: 'post',
-
-    // })
-
-    axios
-      .post('/review/submit', {
-        text: data,
-        weburl: siteURL,
-        title: document.getElementById('title').value,
-        keyword: document.getElementById('keyword').value,
-        rating: starsSelected,
+    formData.append('file', file.file);
+    axios({
+      method: 'post',
+      url: '/review/upload',
+      data: formData,
+      headers: { 'Content-type': 'multipart/form-data' },
+    })
+      .then((url) => {
+        console.log('SUCCESS URL', url);
       })
-      .then(() => {
-        console.log('review posted!');
-        setRedirect(true);
+      .catch((err) => {
+        console.error(err);
       });
+
+    // axios
+    //   .post('/review/submit', {
+    //     text: data,
+    //     weburl: siteURL,
+    //     title: document.getElementById('title').value,
+    //     keyword: document.getElementById('keyword').value,
+    //     rating: starsSelected,
+    //   })
+    //   .then(() => {
+    //     console.log('review posted!');
+    //     setRedirect(true);
+    //   });
   };
 
   const userLogout = () => {
