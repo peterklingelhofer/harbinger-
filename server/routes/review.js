@@ -90,7 +90,9 @@ reviewRoute.post('/submit', (req, res) => {
         keyword,
         rating
       ).then((data) => {
-        const keywords = keyword.split(", ");
+        const keywords = keyword.toLowerCase().split(', ').map((chunk) => {
+          return chunk.split(',');
+        }).flat();
         const saveKeywords = keywords.map((keyword) => {
           return saveOrFindKeyWord(
             keyword,
