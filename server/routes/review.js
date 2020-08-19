@@ -57,19 +57,19 @@ reviewRoute.get('/retrieve', (req, res) => {
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
-      console.log(typeof data.dataValues.username);
-      const { text, title, weburl, keyword } = req.body;
-      console.log(text, weburl, keyword);
+      const { text, title, weburl, keyword, rating } = req.body;
+      // console.log('**** STAR RATING HELLOOOOOOOO:', rating);
       return saveReview(
         data.dataValues.username,
         title,
         text.message,
         weburl,
-        // keyword
+        keyword,
+        rating,
       ).then((data) => {
         saveOrFindKeyWord(
           keyword,
-          data.id, // no idea if this is correct yet
+          data.id,
         );
       })
         .then(() => {

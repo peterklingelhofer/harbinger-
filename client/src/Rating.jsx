@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
 
-const Star = ({ selected = false, onSelect = x => x }) => (
+const Star = ({ selected = false, onSelect = (x) => x }) => (
   <FaStar color={selected ? 'yellow' : 'grey'} onClick={onSelect} />
 );
 
-export default function Rating() {
-  const [starsSelected, setStarsSelected] = useState(0);
+export default function Rating({ checkRating, defaultStars }) {
+  const currentStars = defaultStars || 0;
+  const [starsSelected, setStarsSelected] = useState(currentStars);
+  console.log(defaultStars);
+  useEffect(() => {
+    if (checkRating) {
+      checkRating(starsSelected);
+    }
+  }, [starsSelected]);
   return (
     <>
       {[...Array(5)].map((n, i) => (
