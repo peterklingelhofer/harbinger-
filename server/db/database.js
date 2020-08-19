@@ -125,6 +125,9 @@ const Review = db.define('Review', {
   text: {
     type: Sequelize.STRING(2020),
   },
+  rating: {
+    type: Sequelize.INTEGER,
+  },
   UserId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
@@ -269,7 +272,8 @@ const getUserReviews = (name) => Users.findOne({ where: { username: name } }).th
   .then((data) => data)
   .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
 
-const saveReview = (username, title, text, weburl, keyword) => {
+const saveReview = (username, title, text, weburl, keyword, rating) => {
+  console.log('rating in saveReview ******************************************************************************************', rating);
   let idUser;
   let idWeb;
   let idKeyword;
@@ -286,6 +290,7 @@ const saveReview = (username, title, text, weburl, keyword) => {
             UserId: idUser,
             title,
             text,
+            rating,
             WebUrlId: idWeb,
             date: new Date(),
           }).then((data) => resolve(data));
