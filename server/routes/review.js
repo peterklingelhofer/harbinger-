@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const { Router } = require('express');
 require('../db/database');
 const {
@@ -8,6 +9,7 @@ const {
   updateDislikeInReview,
   saveOrFindWebUrl,
   saveOrFindKeyWord,
+  findArticleByKeyWord,
 } = require('../db/database');
 const { rest } = require('lodash');
 
@@ -33,11 +35,10 @@ reviewRoute.post('/url', (req, res) => {
   res.end();
 });
 
-// Tag is the tag to search by, nothing returns all reviews sorted by likes
-// returns an array of Reviews, each with a User and a WebUrl
-reviewRoute.get('/retrieve/:tag', (req, res) => {
-  const { tag } = req.params;
-  findTopReviews(tag).then((data) => {
+// Keyword is the keyword to search by
+reviewRoute.get('/retrieve/:keyword', (req, res) => {
+  const { keyword } = req.params;
+  findArticleByKeyWord(keyword).then((data) => {
     res.status(200).send(data);
   })
     .catch((err) => {
@@ -54,23 +55,28 @@ reviewRoute.get('/retrieve', (req, res) => {
     });
 });
 
+
+// Saves a review and its keywords to the db (user and url saved to db in db file)
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
       const { text, title, weburl, keyword, rating } = req.body;
-      // console.log('**** STAR RATING HELLOOOOOOOO:', rating);
       return saveReview(
         data.dataValues.username,
         title,
         text.message,
         weburl,
         keyword,
-        rating,
+        rating
       ).then((data) => {
-        saveOrFindKeyWord(
-          keyword,
-          data.id,
-        );
+        const keywords = keyword.split(", ");
+        const saveKeywords = keywords.map((keyword) => {
+          return saveOrFindKeyWord(
+            keyword,
+            data.dataValues.id,
+          );
+        });
+        return Promise.all(saveKeywords);
       })
         .then(() => {
           res.status(201);
