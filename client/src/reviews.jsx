@@ -11,6 +11,7 @@ import Rating from './Rating.jsx';
 function Reviews(props) {
   const { register, handleSubmit } = useForm();
   const [reviews, setRev] = useState([]);
+  const [starsSelected, setStarsSelected] = useState(0);
   const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     border: 0,
@@ -76,6 +77,7 @@ function Reviews(props) {
             review.username = data[0][index];
             review.webUrl = data[2][index];
             review.image = data[3][index];
+            review.rating = data[4][index];
             revArray.push(review);
           });
           setRev(revArray);
@@ -84,8 +86,6 @@ function Reviews(props) {
       .catch((err) => console.error(err));
   }, []);
   const updateLike = (reviewId, type) => {
-    // console.log(reviewId, type);
-
     axios
       .put(`/review/update/type=${type}`, {
         reviewId,
@@ -102,6 +102,7 @@ function Reviews(props) {
         weburl: siteURL,
         title: document.getElementById('title').value,
         keyword: document.getElementById('keyword').value,
+        rating: starsSelected,
       })
       .then(() => {
         console.log('review posted!');
@@ -113,6 +114,11 @@ function Reviews(props) {
     axios.get('/logout').then(() => {
       window.location = '/';
     });
+  };
+
+  const checkRating = (stars) => {
+    setStarsSelected(stars);
+    console.log(stars);
   };
 
   return (
@@ -229,7 +235,7 @@ function Reviews(props) {
                 }
               }}
             >
-              <MyButton>like</MyButton>
+              <MyButton>Helpful</MyButton>
             </button>
             <button
               type="submit"
@@ -240,14 +246,14 @@ function Reviews(props) {
                 }
               }}
             >
-              <MyButton>dislike</MyButton>
+              <MyButton>Unhelpful</MyButton>
             </button>
           </div>
         );
       })}
-      <div style={{ marginLeft: '500px', backgroundColor: '#9ACD32' }}>
-        <h1>Reviews Component</h1>
-        <input id="title" type="text" placeholder="leave a title" />
+      <div style={{ marginLeft: '10px', marginRight: '10px', backgroundColor: '#9ACD32' }}>
+        <h1>Write Review</h1>
+        <input id="title" type="text" placeholder="Title your Review" />
         <br />
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Review:</label>
@@ -255,7 +261,7 @@ function Reviews(props) {
           <textarea ref={register} name="message" />
           <br />
           <div>
-            <Rating />
+            <Rating checkRating={checkRating} />
           </div>
           <div>
             Keywords help other users find other reviews associated with what

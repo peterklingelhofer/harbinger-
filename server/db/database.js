@@ -126,6 +126,9 @@ const Review = db.define('Review', {
   text: {
     type: Sequelize.STRING(2020),
   },
+  rating: {
+    type: Sequelize.INTEGER,
+  },
   UserId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
@@ -170,62 +173,11 @@ const Keyword = db.define('Keyword', {
 }, { timestamps: false });
 Keyword.sync();
 
-// const ReviewKeyword = db.define('ReviewKeywords', {
-//   // ReviewId: {
-//   //   type: Sequelize.INTEGER,
-//   //   references: {
-//   //     model: Review,
-//   //     key: 'id',
-//   //   },
-//   // },
-//   // KeywordId: {
-//   //   type: Sequelize.INTEGER,
-//   //   references: {
-//   //     model: Keyword,
-//   //     key: 'id',
-//   //   },
-//   // },
-// }, { timestamps: false });
-// ReviewKeyword.sync();
-
-// TESTING TO SEE IF I CAN FIX DB LINKS
 Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
 Review.hasMany(Keyword, { as: 'keywords' });
 db.sync();
-
-// const findArticleByKeyWord = (keyword) => Keyword.findAll({ where: { keyword } }).then((data) => {
-//   console.log('FOUND KEYWORDS: ', data);
-//   if (data === null) {
-//     console.log('KEYWORD NOT FOUND');
-//   } else {
-//     console.log("HERE");
-//     return Review.findAll({
-//       include: [{
-//         model: db.models.Keyword,
-//         as: 'Keywords',
-//         through: 'ReviewKeyword',
-//         where: {
-//           KeywordId: data.dataValues.id,
-//         },
-//       }],
-//       // include: [
-//       //   {
-//       //     model: Users,
-//       //     required: true,
-//       //   },
-//       // ],
-//     })
-//     // return Review.findAll({
-//     //   where: {
-//     //     id: data.id,
-//     //   },
-//     // })
-//       .then((data) => data)
-//       .catch((err) => console.log(err, 'SOMETHING WENT WRONG'));
-//   }
-// });
 
 
 /**
@@ -254,16 +206,6 @@ const findArticleByKeyWord = (keyword) => Keyword.findAll({
     }
   })
   .catch((err) => console.log('ERROR: ', err));
-
-// const saveOrFindKeyWord = (keyword, id_review) => Keyword.findOne({ where: { keyword } })
-//   .then((data) => {
-//     if (data === null) {
-//       console.log('keyword created!!!');
-//       return Keyword.create({ keyword, id_review });
-//     }
-//     return data;
-//   })
-//   .catch((err) => console.log(err));
 
 const saveOrFindKeyWord = (keyword, idReview) => Keyword.create({ keyword, ReviewId: idReview })
   .then((data) => data)
@@ -306,10 +248,12 @@ const getUserReviews = (name) => Users.findOne({ where: { username: name } }).th
   .then((data) => data)
   .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
 
-const saveReview = (username, title, text, weburl) => {
+
+const saveReview = (username, title, text, weburl, keyword, rating) => {
   let idUser;
   let idWeb;
   return new Promise((resolve, reject) => {
+
     saveOrFindWebUrl(weburl).then((data) => {
       idWeb = data.dataValues.id;
       Users.findOne({ where: { username } }).then((data) => {
@@ -320,6 +264,7 @@ const saveReview = (username, title, text, weburl) => {
           UserId: idUser,
           title,
           text,
+          rating,
           WebUrlId: idWeb,
           date: new Date(),
         }).then((data) => resolve(data));
@@ -394,6 +339,7 @@ module.exports = {
   saveUsers,
   saveOrFindKeyWord,
   saveOrFindWebUrl,
+  saveReviewComments,
   saveReview,
   findUserAndUpdateBio,
   findUserAndUpdateImage,

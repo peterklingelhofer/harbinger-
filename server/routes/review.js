@@ -60,14 +60,14 @@ reviewRoute.get('/retrieve', (req, res) => {
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
-      console.log(typeof data.dataValues.username);
-      const { text, title, weburl, keyword } = req.body;
-      console.log('TEXT, WEBURL, KEYWORD: '. text, weburl, keyword);
+      const { text, title, weburl, keyword, rating } = req.body;
       return saveReview(
         data.dataValues.username,
         title,
         text.message,
         weburl,
+        keyword,
+        rating
       ).then((data) => {
         const keywords = keyword.split(", ");
         const saveKeywords = keywords.map((keyword) => {
