@@ -218,11 +218,7 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
   id_user: idUser,
   id_review: idReview,
 });
-// .then((savedComment) => {
-//   console.log('comment successfully saved in DB');
-//   console.log(savedComment);
-// })
-// .catch((error) => { throw error; });
+
 
 /**
  * Database helper to find reviews by keyword
@@ -406,24 +402,3 @@ module.exports = {
   findUserAndUpdateUsername,
   getWebUrls,
 };
-
-
-
-// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("google", "5", "2", "terrible", "1", "1", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("nola.com", "1", "3", "excellent news analysis in the reader comments; real cerebral stuff", "1", "2", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("bikeforums", "2", "2", "good bike ingo", "1", "3", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("ebay", "5", "4", "good site for used bike and tuba parts", "1", "4", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-
-// insert into WebUrls (url, createdAt, updatedAt) values ('https://google.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// insert into WebUrls (url, createdAt, updatedAt) values ('https://nola.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// insert into WebUrls (url, createdAt, updatedAt) values ('https://ebay.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-// insert into WebUrls (url, createdAt, updatedAt) values ('https://bikeforums.net', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
-
-// insert into Keywords (keyword, ReviewId) values ('tuba', 3);
-// insert into Keywords (keyword, ReviewId) values ('bike', 3);
-// insert into Keywords (keyword, ReviewId) values ('parts', 3);
-// insert into Keywords (keyword, ReviewId) values ('part', 3);
-// insert into Keywords (keyword, ReviewId) values ('bike', 4);
-// insert into Keywords (keyword, ReviewId) values ('cycling', 4);
-// insert into Keywords (keyword, ReviewId) values ('news', 2);
-// insert into Keywords (keyword, ReviewId) values ('new orleans', 2);
