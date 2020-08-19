@@ -58,10 +58,12 @@ reviewRoute.get('/retrieve', (req, res) => {
 });
 
 /**
- * Uploads an image to our bucket
+ * Uploads an image to our bucket use formData to send a file
+ * @param {File} file the file you want to upload
+ * @returns {String} the url to the uploaded file
  */
 reviewRoute.post('/upload', (req, res) => {
-  if (req.user) {
+  if (!req.user) {
     const fileToUpload = req.file;
     uploadImage(fileToUpload)
       .then((url) => {

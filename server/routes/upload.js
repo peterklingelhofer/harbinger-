@@ -1,6 +1,9 @@
 const { Storage } = require('@google-cloud/storage');
+const path = require('path');
 
-const storage = new Storage();
+const storage = new Storage({
+  keyFilename: path.join(__dirname, './gCloudConfig.json'),
+});
 
 const bucket = storage.bucket(process.env.GCLOUD_BUCKET_NAME);
 
