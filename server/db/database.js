@@ -216,8 +216,6 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
 // })
 // .catch((error) => { throw error; });
 
-const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
-
 /**
  * Database helper to find reviews by keyword
  */
