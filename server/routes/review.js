@@ -55,7 +55,6 @@ reviewRoute.get('/retrieve', (req, res) => {
     });
 });
 
-
 // Saves a review and its keywords to the db (user and url saved to db in db file)
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
