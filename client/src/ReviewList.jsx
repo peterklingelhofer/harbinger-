@@ -4,7 +4,8 @@ import Review from './Review.jsx';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
- *  maps the indiviual review componenets to the page
+ *  maps the indiviual review componenets to the page. These are displayed on the
+ * homepage.
  */
 const ReviewList = () => {
   const [reviews, setReviews] = useState([]);
