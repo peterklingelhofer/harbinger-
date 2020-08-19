@@ -62,14 +62,19 @@ const KeywordBox = styled(Box)({
   color: 'blue',
 });
 
-const updateLike = (reviewId, type) => {
+
+const updateLike = (reviewId, type, user) => {
+  const { id } = user;
   axios
     .put(`/review/update/type=${type}`, {
       reviewId,
     })
     .then(() => {
-      console.log('posted:', reviewId, type);
-    });
+      console.log('userId:', reviewId, type);
+    })
+    .put(`/review/update/type=hasRated`, {
+      id,
+    })
 };
 
 /**
@@ -138,7 +143,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        updateLike(info.id, 'like');
+        updateLike(info.id, 'like', info.User);
       }}
     >
       <MyButton>Helpful</MyButton>
