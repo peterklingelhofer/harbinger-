@@ -206,14 +206,8 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
   id_user: idUser,
   id_review: idReview,
 });
-  // .then((savedComment) => {
-  //   console.log('comment successfully saved in DB');
-  //   console.log(savedComment);
-  // })
-  // .catch((error) => { throw error; });
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
-
   if (data === null) {
     console.log('no keyword found');
   } else {
@@ -232,16 +226,6 @@ const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }
       .catch((err) => console.log(err, 'SOMETHING WENT WRONG'));
   }
 });
-
-// const saveOrFindKeyWord = (keyword, id_review) => Keyword.findOne({ where: { keyword } })
-//   .then((data) => {
-//     if (data === null) {
-//       console.log('keyword created!!!');
-//       return Keyword.create({ keyword, id_review });
-//     }
-//     return data;
-//   })
-//   .catch((err) => console.log(err));
 
 const saveOrFindKeyWord = (keyword, idReview) => Keyword.create({ keyword, idReview })
   .then((data) => data)
@@ -333,6 +317,12 @@ const findTopReviews = () => new Promise((resolve, reject) => {
     .catch((err) => {
       reject(err);
     });
+});
+
+const getReviewComments = (userId) => Comment.findAll({
+  where: {
+    id_user: userId,
+  },
 });
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
