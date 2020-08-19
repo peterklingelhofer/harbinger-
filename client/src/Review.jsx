@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core';
 import Rating from './Rating.jsx';
+import Keyword from './Keyword.jsx';
 
 const ImageBG = styled(Box)({
   borderRadius: 7,
@@ -56,6 +57,11 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+const KeywordBox = styled(Box)({
+  borderRadius: 2,
+  color: 'blue',
+});
+
 const updateLike = (reviewId, type) => {
   axios
     .put(`/review/update/type=${type}`, {
@@ -95,6 +101,11 @@ const Review = ({ info }) => (
             's Profile
           </h4>
         </Link>
+        <KeywordBox>
+          <h3>
+            {info.keywords.map((object) => <Keyword key={object.KeywordId} keyword={object} />)}
+          </h3>
+        </KeywordBox>
         <a
           href={info.WebUrl.url}
           style={{ marginLeft: '170px', padding: '0px' }}
