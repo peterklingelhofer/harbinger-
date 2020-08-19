@@ -8,7 +8,6 @@ const Star = ({ selected = false, onSelect = (x) => x }) => (
 export default function Rating({ checkRating, defaultStars, alreadyRated }) {
   const currentStars = defaultStars || 0;
   const [starsSelected, setStarsSelected] = useState(currentStars);
-  console.log(defaultStars);
   useEffect(() => {
     if (checkRating) {
       checkRating(starsSelected);

@@ -57,14 +57,17 @@ const MyButton = styled(Button)({
 });
 
 const updateLike = (reviewId, type, user) => {
-  console.log(user);
+  const { id } = user;
   axios
     .put(`/review/update/type=${type}`, {
       reviewId,
     })
     .then(() => {
       console.log('userId:', reviewId, type);
-    });
+    })
+    .put(`/review/update/type=hasRated`, {
+      id,
+    })
 };
 
 /**
