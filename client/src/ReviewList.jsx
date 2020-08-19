@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Review from './Review.jsx';
 
@@ -7,13 +8,14 @@ import Review from './Review.jsx';
  *  maps the indiviual review componenets to the page. These are displayed on the
  * homepage.
  */
-const ReviewList = () => {
+const ReviewList = ({ userId }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     axios({
       method: 'get',
       url: '/review/retrieve',
+      userId,
     })
       .then(({ data }) => {
         setReviews(data);
@@ -31,3 +33,7 @@ const ReviewList = () => {
 };
 
 export default ReviewList;
+
+ReviewList.propTypes = {
+  userId: PropTypes.number,
+};
