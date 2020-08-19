@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { useForm } from 'react-hook-form';
 import Search from './search.jsx';
 import ReviewList from './ReviewList.jsx';
+import PhotoUpload from './PhotoUpload.jsx';
 
 function HomePage() {
   const [user, setUser] = useState([]);
@@ -103,6 +104,7 @@ function HomePage() {
       <Background style={{ color: "white", marginLeft: "600px" }}>
         <h2>Top Best Reviews</h2>
       </Background>
+      <PhotoUpload />
       <ReviewList />
     </div>
   );

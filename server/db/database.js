@@ -172,6 +172,7 @@ const Keyword = db.define('Keyword', {
 });
 Keyword.sync();
 
+// Merging
 // created new table in DB to persist users comments on other users website reviews
 const Comment = db.define('Comment', {
   id: { // sqeualize id number auto generated
@@ -206,11 +207,11 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
   id_user: idUser,
   id_review: idReview,
 });
-  // .then((savedComment) => {
-  //   console.log('comment successfully saved in DB');
-  //   console.log(savedComment);
-  // })
-  // .catch((error) => { throw error; });
+// .then((savedComment) => {
+//   console.log('comment successfully saved in DB');
+//   console.log(savedComment);
+// })
+// .catch((error) => { throw error; });
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
 
