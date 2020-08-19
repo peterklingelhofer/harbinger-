@@ -127,6 +127,18 @@ function Reviews(props) {
     })
       .then((url) => {
         console.log('SUCCESS URL', url);
+        return axios.post('/review/submit', {
+          text: data,
+          weburl: siteURL,
+          photourl: url,
+          title: document.getElementById('title').value,
+          keyword: document.getElementById('keyword').value,
+          rating: starsSelected,
+        });
+      })
+      .then(() => {
+        console.log('review posted!');
+        setRedirect(true);
       })
       .catch((err) => {
         console.error(err);
