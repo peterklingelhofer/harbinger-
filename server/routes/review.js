@@ -13,6 +13,8 @@ const {
 } = require('../db/database');
 const { rest } = require('lodash');
 
+const uploadImage = require('./upload');
+
 const reviewRoute = Router();
 let changer = '';
 reviewRoute.get('/url', (req, res) => {
@@ -57,11 +59,17 @@ reviewRoute.get('/retrieve', (req, res) => {
 
 /**
  * Uploads an image to our bucket
- * 
  */
 reviewRoute.post('/upload', (req, res) => {
   if (req.user) {
     const fileToUpload = req.file;
+    uploadImage(fileToUpload)
+      .then((url) => {
+        res.status(201).send(url);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   } else {
     res.status(401).send(null);
   }

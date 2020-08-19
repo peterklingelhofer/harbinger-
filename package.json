@@ -4,6 +4,7 @@
   "description": "Upvote and comment on your favorite websites!",
   "main": "index.js",
   "dependencies": {
+    "@google-cloud/storage": "^5.2.0",
     "@material-ui/core": "^4.11.0",
     "axios": "^0.19.2",
     "azure-cognitiveservices-websearch": "^2.0.0",
