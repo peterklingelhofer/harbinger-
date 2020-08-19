@@ -5,3 +5,4 @@ bundle.js
 
 .gcloudignore
 app.yaml
+gCloudConfig.json
