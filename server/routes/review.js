@@ -55,6 +55,18 @@ reviewRoute.get('/retrieve', (req, res) => {
     });
 });
 
+/**
+ * Uploads an image to our bucket
+ * 
+ */
+reviewRoute.post('/upload', (req, res) => {
+  if (req.user) {
+    const fileToUpload = req.file;
+  } else {
+    res.status(401).send(null);
+  }
+});
+
 // Saves a review and its keywords to the db (user and url saved to db in db file)
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
