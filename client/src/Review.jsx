@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
@@ -44,13 +45,13 @@ const MyButton = styled(Button)({
 });
 
 const updateLike = (reviewId, type) => {
-  console.log(reviewId, type);
-
-  axios.put(`/review/update/type=${type}`, {
-    reviewId,
-  }).then(() => {
-    console.log('posted');
-  });
+  axios
+    .put(`/review/update/type=${type}`, {
+      reviewId,
+    })
+    .then(() => {
+      console.log('posted:', reviewId, type);
+    });
 };
 
 /**
@@ -122,9 +123,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        // console.log(info.likes);
-        // console.log(info.id);
-        updateLike(info.id, like);
+        updateLike(info.id, 'like');
       }}
     >
       <MyButton>Helpful</MyButton>
@@ -132,9 +131,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        // console.log(info.dislike);
-        // console.log(info.id);
-        updateLike(info.id, dislike);
+        updateLike(info.id, 'dislike');
       }}
     >
       <MyButton>Unhelpful</MyButton>
