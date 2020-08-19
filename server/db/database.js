@@ -1,6 +1,6 @@
 const { Sequelize, TableHints } = require('sequelize');
 const { WebSearchModels } = require('azure-cognitiveservices-websearch');
-const { reject } = require('lodash');
+// const { reject } = require('lodash');
 // const { default: Reviews } = require('../../client/src/reviews');
 require('dotenv').config();
 // create a connection to localDB
@@ -14,6 +14,7 @@ const db_host = process.env.HOST || 'localhost';
 const db = process.env.PRODENV === 'gcloud' ? new Sequelize(db_name, db_user, db_pass, {
   host: `/cloudsql/${process.env.HOST}`,
   dialect: 'mysql',
+  logging: false,
   dialectOptions: {
     socketPath: `/cloudsql/${process.env.HOST}`,
   },
@@ -21,6 +22,7 @@ const db = process.env.PRODENV === 'gcloud' ? new Sequelize(db_name, db_user, db
   : new Sequelize(db_name, db_user, db_pass, {
     host: db_host,
     dialect: 'mysql',
+    logging: false,
   });
 
 db.authenticate()
@@ -275,19 +277,16 @@ const saveUsers = (username, serial, bio, image) => Users.findOne({ where: { ser
 
 const getUser = (id) => Users.findOne({ where: { serial: id } });
 
-const getUserReviews = (name) => Users.findOne({ where: { username: name } }).then((data) => Review.findAll({
-  where: {
-    id_user: data.id,
-  },
-  include: [
-    {
-      model: Users,
-      required: true,
-    },
-  ],
-})
-  .then((data) => data)
-  .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
+//NOT USED
+const getUserReviews = (userId) => new Promise((resolve, reject) => {
+  Review.findAll({ where: {}, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+    .then((data) => {
+      resolve(data);
+    })
+    .catch((err) => {
+      reject(err);
+    });
+});
 
 
 const saveReview = (username, title, text, weburl, keyword, rating, photourl, hasRated) => {
@@ -329,8 +328,9 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
 /**
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
-const findTopReviews = () => new Promise((resolve, reject) => {
-  Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+const findTopReviews = (userId) => new Promise((resolve, reject) => {
+  const where = !userId ? {} : { id: userId };
+  Review.findAll({ where, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
     .then((data) => {
       resolve(data);
     })

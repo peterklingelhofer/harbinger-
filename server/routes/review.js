@@ -11,6 +11,7 @@ const {
   saveOrFindWebUrl,
   saveOrFindKeyWord,
   findArticleByKeyWord,
+  getUserReviews,
 } = require('../db/database');
 const { rest } = require('lodash');
 
@@ -51,7 +52,7 @@ reviewRoute.get('/retrieve/:keyword', (req, res) => {
 });
 
 reviewRoute.get('/retrieve', (req, res) => {
-  findTopReviews()
+  findTopReviews(req.query.userId)
     .then((data) => {
       res.status(200).send(data);
     })
