@@ -97,26 +97,26 @@ function Profile() {
     });
   }, []);
 
-  useEffect(() => {
-    axios.get('/good').then(({ data }) => {
-      // console.log(data.username, data, 'user');
-      const { image } = data;
-      axios.post(`/user/${username}`, {
-        username,
-      })
-        .then((reviews) => {
-          const userArray = [];
-          reviews.data[1].forEach((review, index) => {
-            review.username = reviews.data[0][index];
-            review.webUrl = reviews.data[2][index];
-            review.image = image;
-            userArray.push(review);
-            console.log(userArray, 'userArray');
-          });
-          setUserReviews(userArray);
-        });
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('/good').then(({ data }) => {
+  //     // console.log(data.username, data, 'user');
+  //     const { image } = data;
+  //     axios.post(`/user/${username}`, {
+  //       username,
+  //     })
+  //       .then((reviews) => {
+  //         const userArray = [];
+  //         reviews.data[1].forEach((review, index) => {
+  //           review.username = reviews.data[0][index];
+  //           review.webUrl = reviews.data[2][index];
+  //           review.image = image;
+  //           userArray.push(review);
+  //           console.log(userArray, 'userArray');
+  //         });
+  //         setUserReviews(userArray);
+  //       });
+  //   });
+  // }, []);
 
   const userLogout = () => {
     axios.get('/logout').then(() => {

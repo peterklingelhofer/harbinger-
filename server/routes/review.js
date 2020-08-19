@@ -49,6 +49,7 @@ reviewRoute.get('/retrieve/:keyword', (req, res) => {
 });
 
 reviewRoute.get('/retrieve', (req, res) => {
+  console.log("CHECK THE QUERY", req.query)
   findTopReviews().then((data) => {
     res.status(200).send(data);
   })

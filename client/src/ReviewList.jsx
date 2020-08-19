@@ -15,7 +15,9 @@ const ReviewList = ({ userId }) => {
     axios({
       method: 'get',
       url: '/review/retrieve',
-      userId,
+      params: {
+        userId,
+      },
     })
       .then(({ data }) => {
         setReviews(data);
