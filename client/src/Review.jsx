@@ -56,13 +56,14 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
-const updateLike = (reviewId, type) => {
+const updateLike = (reviewId, type, user) => {
+  console.log(user);
   axios
     .put(`/review/update/type=${type}`, {
       reviewId,
     })
     .then(() => {
-      console.log('posted:', reviewId, type);
+      console.log('userId:', reviewId, type);
     });
 };
 
@@ -127,7 +128,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        updateLike(info.id, 'like');
+        updateLike(info.id, 'like', info.User);
       }}
     >
       <MyButton>Helpful</MyButton>
