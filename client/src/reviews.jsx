@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
 import { styled, Backdrop } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
 import Rating from './Rating.jsx';
+import PhotoUpload from './PhotoUpload.jsx';
 
 function Reviews(props) {
   const { register, handleSubmit } = useForm();
   const [reviews, setRev] = useState([]);
   const [starsSelected, setStarsSelected] = useState(0);
+  const [redirect, setRedirect] = useState(false);
+  const [file, setFile] = useState(null);
   const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     border: 0,
@@ -94,8 +97,33 @@ function Reviews(props) {
         console.log('posted');
       });
   };
+
+  /**
+   * Handles what happens when the file is changed
+   * @param {Event} e event of a changing file
+   */
+  const fileChangeHandler = (e) => {
+    setFile(null);
+    e.persist();
+    if (e.target.files) {
+      const newImage = {
+        name: e.target.files[0].name,
+        url: URL.createObjectURL(e.target.files[0]),
+        file: e.target.files[0],
+      };
+      setFile(newImage);
+    }
+  };
+
+  // Submits a review
   const onSubmit = (data) => {
-    console.log(data);
+    const formData = new FormData();
+    // formData.append('file', file)
+    // axios({
+    //   method: 'post',
+
+    // })
+
     axios
       .post('/review/submit', {
         text: data,
@@ -106,7 +134,7 @@ function Reviews(props) {
       })
       .then(() => {
         console.log('review posted!');
-        window.location = '/me';
+        setRedirect(true);
       });
   };
 
@@ -123,6 +151,7 @@ function Reviews(props) {
 
   return (
     <div>
+      {!redirect ? null : <Redirect to="/me" />}
       <Background>
         <h1 style={{ color: 'white', display: 'inline-block' }}>
           Leave a Review For {siteURL.split('//')[1].split('.com')[0]}
@@ -269,6 +298,7 @@ function Reviews(props) {
           </div>
           <input id="keyword" type="text" placeholder="leave a keyword" />
           <br />
+          <PhotoUpload changeHandler={fileChangeHandler} file={file} />
           <button style={{ marginBottom: '50px' }}>
             <MyButton>Submit Review</MyButton>
           </button>
