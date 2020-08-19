@@ -1,5 +1,6 @@
 const { Sequelize, TableHints } = require('sequelize');
 const { WebSearchModels } = require('azure-cognitiveservices-websearch');
+const { reject } = require('lodash');
 // const { default: Reviews } = require('../../client/src/reviews');
 require('dotenv').config();
 // create a connection to localDB
@@ -176,7 +177,7 @@ Keyword.sync();
 // Merging
 // created new table in DB to persist users comments on other users website reviews
 const Comment = db.define('Comment', {
-  id: { // sqeualize id number auto generated
+  id: { // sequelize id number auto generated
     type: Sequelize.INTEGER,
     allowNull: false,
     autoIncrement: true,
@@ -185,12 +186,12 @@ const Comment = db.define('Comment', {
   message: { // users typed comment on reviews
     type: Sequelize.STRING(256),
   },
-  id_user: { // id number of specific user making comment
+  UserId: { // id number of specific user making comment
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
   // figure out what other fields are needed in this table and what other tables it must connect to
-  id_review: { // id number of review to link user comment with
+  ReviewId: { // id number of review to link user comment with
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
@@ -202,6 +203,10 @@ Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
 Review.hasMany(Keyword, { as: 'keywords' });
+// create join between Comment & Users tables
+Comment.belongsTo(Review, { as: 'Review', constraints: false });
+// create join between Comment & Review tables
+Comment.belongsTo(Users, { as: 'User', constraints: false });
 db.sync();
 
 // helper function to save users review comments to the "Comments" table in the harbinger DB
@@ -330,6 +335,17 @@ const findTopReviews = () => new Promise((resolve, reject) => {
     });
 });
 
+// db helper function to GET review comments from "Comments" table in the harbinger DB
+const getReviewComments = () => new Promise((resolve, reject) => {
+  Comment.findAll({ include: [{ model: Review, as: 'Review' }, { model: Users, as: 'User' }] })
+    .then((comments) => {
+      resolve(comments);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
+
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
@@ -370,6 +386,7 @@ const getWebUrls = (webIds) => WebUrls.findAll({
 module.exports = {
   db,
   getUser,
+  getReviewComments,
   saveUsers,
   saveOrFindKeyWord,
   saveOrFindWebUrl,
