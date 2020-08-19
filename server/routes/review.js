@@ -63,7 +63,7 @@ reviewRoute.get('/retrieve', (req, res) => {
  * @returns {String} the url to the uploaded file
  */
 reviewRoute.post('/upload', (req, res) => {
-  if (!req.user) {
+  if (req.user) {
     const fileToUpload = req.file;
     uploadImage(fileToUpload)
       .then((url) => {
@@ -81,14 +81,15 @@ reviewRoute.post('/upload', (req, res) => {
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
-      const { text, title, weburl, keyword, rating } = req.body;
+      const { text, title, weburl, keyword, rating, photourl } = req.body;
       return saveReview(
         data.dataValues.username,
         title,
         text.message,
         weburl,
         keyword,
-        rating
+        rating,
+        photourl,
       ).then((data) => {
         const keywords = keyword.toLowerCase().split(', ').map((chunk) => {
           return chunk.split(',');
