@@ -12,7 +12,7 @@ const ReviewList = () => {
   useEffect(() => {
     axios({
       method: 'get',
-      url: '/review/retrieve/null',
+      url: '/review/retrieve',
     })
       .then(({ data }) => {
         setReviews(data);
