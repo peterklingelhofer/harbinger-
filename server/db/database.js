@@ -173,7 +173,6 @@ const Keyword = db.define('Keyword', {
 }, { timestamps: false });
 Keyword.sync();
 
-<<<<<<< HEAD
 // Merging
 // created new table in DB to persist users comments on other users website reviews
 const Comment = db.define('Comment', {
@@ -199,15 +198,12 @@ const Comment = db.define('Comment', {
 Comment.sync();
 
 // TESTING TO SEE IF I CAN FIX DB LINKS
-=======
->>>>>>> 436902b3b2675618810cc8d0fb0219740b87e0b3
 Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
 Review.hasMany(Keyword, { as: 'keywords' });
 db.sync();
 
-<<<<<<< HEAD
 // helper function to save users review comments to the "Comments" table in the harbinger DB
 const saveReviewComments = (message, idUser, idReview) => Comment.create({
   message,
@@ -221,8 +217,6 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
 // .catch((error) => { throw error; });
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
-=======
->>>>>>> 436902b3b2675618810cc8d0fb0219740b87e0b3
 
 /**
  * Database helper to find reviews by keyword
