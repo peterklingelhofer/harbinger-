@@ -141,6 +141,9 @@ const Review = db.define('Review', {
   date: {
     type: Sequelize.DATE,
   },
+  photourl: {
+    type: Sequelize.STRING(500),
+  },
 });
 Review.sync();
 
@@ -288,7 +291,7 @@ const getUserReviews = (name) => Users.findOne({ where: { username: name } }).th
   .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
 
 
-const saveReview = (username, title, text, weburl, keyword, rating) => {
+const saveReview = (username, title, text, weburl, keyword, rating, photourl) => {
   let idUser;
   let idWeb;
   return new Promise((resolve, reject) => {
@@ -306,6 +309,7 @@ const saveReview = (username, title, text, weburl, keyword, rating) => {
           rating,
           WebUrlId: idWeb,
           date: new Date(),
+          photourl,
         }).then((data) => resolve(data));
       });
     });
