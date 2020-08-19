@@ -8,10 +8,12 @@ import { styled, Backdrop } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
+import ReviewList from './ReviewList.jsx';
+import Review from './Review.jsx';
 
 function Profile() {
   let username;
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [userReviews, setUserReviews] = useState([]);
   const { register, handleSubmit } = useForm();
 
@@ -95,26 +97,26 @@ function Profile() {
     });
   }, []);
 
-  useEffect(() => {
-    axios.get('/good').then(({ data }) => {
-      // console.log(data.username, data, 'user');
-      const { image } = data;
-      axios.post(`/user/${username}`, {
-        username,
-      })
-        .then((reviews) => {
-          const userArray = [];
-          reviews.data[1].forEach((review, index) => {
-            review.username = reviews.data[0][index];
-            review.webUrl = reviews.data[2][index];
-            review.image = image;
-            userArray.push(review);
-            console.log(userArray, 'userArray');
-          });
-          setUserReviews(userArray);
-        });
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('/good').then(({ data }) => {
+  //     // console.log(data.username, data, 'user');
+  //     const { image } = data;
+  //     axios.post(`/user/${username}`, {
+  //       username,
+  //     })
+  //       .then((reviews) => {
+  //         const userArray = [];
+  //         reviews.data[1].forEach((review, index) => {
+  //           review.username = reviews.data[0][index];
+  //           review.webUrl = reviews.data[2][index];
+  //           review.image = image;
+  //           userArray.push(review);
+  //           console.log(userArray, 'userArray');
+  //         });
+  //         setUserReviews(userArray);
+  //       });
+  //   });
+  // }, []);
 
   const userLogout = () => {
     axios.get('/logout').then(() => {
@@ -137,17 +139,17 @@ function Profile() {
     <div>
       <div>
         <Background>
-        <h1
-          style={{
-            display: 'inline-block',
-            color: 'white',
-            marginRight: '400px',
-          }}
-        >
-          {user.username}
+          <h1
+            style={{
+              display: 'inline-block',
+              color: 'white',
+              marginRight: '400px',
+            }}
+          >
+            {user.username}
           : Profile
         </h1>
-        <Link to="/">
+          <Link to="/">
             <h1
               style={{
                 display: 'inline-block',
@@ -157,7 +159,7 @@ function Profile() {
             >
               Back to Homepage
             </h1>
-        </Link>
+          </Link>
           <form onSubmit={handleSubmit(userLogout)}>
             <button><MyButton>Logout</MyButton></button>
 
@@ -211,45 +213,9 @@ function Profile() {
       <div>
         <div />
       </div>
-     <Background><h1 style={{ marginLeft: "500px", color: "white" }}>My Reviews</h1></Background>
+      <Background><h1 style={{ marginLeft: "500px", color: "white" }}>My Reviews</h1></Background>
       <div>
-        {userReviews.map((review) => {
-          console.log(review);
-          return (
-          <div>
-            <ImageBG width="200">
-            <div >
-            <img src={review.image} style={{ position: 'absolute', marginBottom: "20px", boxShadow: '0 3px 10px 2px gray', }} width='150px'
-          height='150px'/>
-            <TitleBox>
-            <h1 style={{ marginLeft: "200px", padding: "0px", color: "white"}}>{review.title}</h1>
-            </TitleBox>
-            <h4 style={{ marginLeft: "170px", padding: "0px"}}> Written By: {review.username}</h4>
-            <a href={review.webUrl} style={{ marginLeft: "170px", padding: "0px"}}>{review.webUrl}</a>
-            <div style={{ padding: "20px"}}>
-            <div style={{ display: 'inline-block', marginLeft: "20px" }}>
-            <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-            <h4 style={{ }}>
-              Likes:
-            {review.likes}
-            </h4>
-            </LikeBG>
-            <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-            <h4>
-              {' '}
-            Dislikes:
-            {review.dislike}
-            </h4>
-            </DikeBG>
-            </div>
-            <div style={{ maxWidth: "700px", marginLeft: "50px", marginBottom: "30px", positon: "absolute", padding: "12px", display: 'inline-block' }}>{review.text}</div>
-            </div>
-            <img height="10" style={{marginTop: "20px"}}></img>
-            </div>
-            </ImageBG>
-          </div>
-          )
-        })}
+        {!user.id ? null : <ReviewList userId={user.id} />}
       </div>
     </div>
   );

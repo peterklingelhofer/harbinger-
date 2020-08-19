@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import { useForm } from 'react-hook-form';
 import Search from './search.jsx';
 import ReviewList from './ReviewList.jsx';
-import PhotoUpload from './PhotoUpload.jsx';
 
 function HomePage() {
   const [user, setUser] = useState([]);
@@ -40,19 +38,8 @@ function HomePage() {
     });
   }, []);
 
-  const updateLike = (reviewId, type) => {
-    //console.log(reviewId, type);
-
-    axios.put(`/review/update/type=${type}`, {
-      reviewId,
-    }).then(() => {
-      console.log('posted');
-    });
-  };
-
   const userLogout = () => {
     axios.get('/logout').then(() => {
-      // console.log('logged out');
       window.location = '/';
     });
   };
@@ -101,11 +88,9 @@ function HomePage() {
         </Background>
       </div>
       <Search />
-      <PhotoUpload />
       <Background style={{ color: "white", marginLeft: "600px" }}>
         <h2>Top Best Reviews</h2>
       </Background>
-      <PhotoUpload />
       <ReviewList />
     </div>
   );

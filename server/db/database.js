@@ -1,6 +1,6 @@
 const { Sequelize, TableHints } = require('sequelize');
 const { WebSearchModels } = require('azure-cognitiveservices-websearch');
-const { reject } = require('lodash');
+// const { reject } = require('lodash');
 // const { default: Reviews } = require('../../client/src/reviews');
 require('dotenv').config();
 // create a connection to localDB
@@ -14,6 +14,7 @@ const db_host = process.env.HOST || 'localhost';
 const db = process.env.PRODENV === 'gcloud' ? new Sequelize(db_name, db_user, db_pass, {
   host: `/cloudsql/${process.env.HOST}`,
   dialect: 'mysql',
+  logging: false,
   dialectOptions: {
     socketPath: `/cloudsql/${process.env.HOST}`,
   },
@@ -21,6 +22,7 @@ const db = process.env.PRODENV === 'gcloud' ? new Sequelize(db_name, db_user, db
   : new Sequelize(db_name, db_user, db_pass, {
     host: db_host,
     dialect: 'mysql',
+    logging: false,
   });
 
 db.authenticate()
@@ -140,6 +142,12 @@ const Review = db.define('Review', {
   },
   date: {
     type: Sequelize.DATE,
+  },
+  photourl: {
+    type: Sequelize.STRING(500),
+  },
+  hasRated: {
+    type: Sequelize.STRING(2020),
   },
 });
 Review.sync();
@@ -269,22 +277,19 @@ const saveUsers = (username, serial, bio, image) => Users.findOne({ where: { ser
 
 const getUser = (id) => Users.findOne({ where: { serial: id } });
 
-const getUserReviews = (name) => Users.findOne({ where: { username: name } }).then((data) => Review.findAll({
-  where: {
-    id_user: data.id,
-  },
-  include: [
-    {
-      model: Users,
-      required: true,
-    },
-  ],
-})
-  .then((data) => data)
-  .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
+//NOT USED
+const getUserReviews = (userId) => new Promise((resolve, reject) => {
+  Review.findAll({ where: {}, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+    .then((data) => {
+      resolve(data);
+    })
+    .catch((err) => {
+      reject(err);
+    });
+});
 
 
-const saveReview = (username, title, text, weburl, keyword, rating) => {
+const saveReview = (username, title, text, weburl, keyword, rating, photourl, hasRated) => {
   let idUser;
   let idWeb;
   return new Promise((resolve, reject) => {
@@ -292,7 +297,7 @@ const saveReview = (username, title, text, weburl, keyword, rating) => {
     saveOrFindWebUrl(weburl).then((data) => {
       idWeb = data.dataValues.id;
       Users.findOne({ where: { username } }).then((data) => {
-        idUser = data.dataValues.id;
+        idUser = data.id;
         return Review.create({
           likes: 0,
           dislike: 0,
@@ -302,6 +307,8 @@ const saveReview = (username, title, text, weburl, keyword, rating) => {
           rating,
           WebUrlId: idWeb,
           date: new Date(),
+          photourl,
+          hasRated: idUser,
         }).then((data) => resolve(data));
       });
     });
@@ -321,8 +328,9 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
 /**
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
-const findTopReviews = () => new Promise((resolve, reject) => {
-  Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+const findTopReviews = (userId) => new Promise((resolve, reject) => {
+  const where = !userId ? {} : { id: userId };
+  Review.findAll({ where, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
     .then((data) => {
       resolve(data);
     })
@@ -343,10 +351,27 @@ const getReviewComments = () => new Promise((resolve, reject) => {
 });
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
+  debugger;
+  Review.findOne({ where: { id: reviewId } })
+    .then((review) => {
+      const { likes, UserId, hasRated } = review;
+      let array = hasRated.split(',');
+      if (!(hasRated.split(',').includes(UserId.toString()))) {
+        review.update({ likes: likes + 1 }).then(() => {
+          resolve();
+        });
+      }
+    })
+    .catch(() => {
+      reject();
+    });
+});
+
+const updateHasRatedInReview = (reviewId, userId) => new Promise((resolve, reject) => {
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
       const { likes } = review;
-      review.update({ likes: likes + 1 }).then(() => {
+      review.update({ hasRated: userId }).then(() => {
         resolve();
       });
     })
@@ -394,6 +419,7 @@ module.exports = {
   findTopReviews,
   updateLikeInReview,
   updateDislikeInReview,
+  updateHasRatedInReview,
   getUserReviews,
   findUserAndUpdateUsername,
   getWebUrls,
