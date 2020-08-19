@@ -1,4 +1,6 @@
 const { Sequelize, TableHints } = require('sequelize');
+const { WebSearchModels } = require('azure-cognitiveservices-websearch');
+const { reject } = require('lodash');
 // const { default: Reviews } = require('../../client/src/reviews');
 require('dotenv').config();
 // create a connection to localDB
@@ -156,7 +158,7 @@ const WebUrls = db.define('WebUrls', {
 WebUrls.sync();
 
 const Keyword = db.define('Keyword', {
-  id: {
+  KeywordId: {
     type: Sequelize.INTEGER,
     allowNull: false,
     autoIncrement: true,
@@ -165,16 +167,17 @@ const Keyword = db.define('Keyword', {
   keyword: {
     type: Sequelize.STRING(100),
   },
-  id_review: {
+  ReviewId: {
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
-});
+}, { timestamps: false });
 Keyword.sync();
 
+// Merging
 // created new table in DB to persist users comments on other users website reviews
 const Comment = db.define('Comment', {
-  id: { // sqeualize id number auto generated
+  id: { // sequelize id number auto generated
     type: Sequelize.INTEGER,
     allowNull: false,
     autoIncrement: true,
@@ -183,12 +186,12 @@ const Comment = db.define('Comment', {
   message: { // users typed comment on reviews
     type: Sequelize.STRING(256),
   },
-  id_user: { // id number of specific user making comment
+  UserId: { // id number of specific user making comment
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
   // figure out what other fields are needed in this table and what other tables it must connect to
-  id_review: { // id number of review to link user comment with
+  ReviewId: { // id number of review to link user comment with
     type: Sequelize.INTEGER,
     foreignKey: true,
   },
@@ -198,6 +201,12 @@ Comment.sync();
 // TESTING TO SEE IF I CAN FIX DB LINKS
 Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
+Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
+Review.hasMany(Keyword, { as: 'keywords' });
+// create join between Comment & Users tables
+Comment.belongsTo(Review, { as: 'Review', constraints: false });
+// create join between Comment & Review tables
+Comment.belongsTo(Users, { as: 'User', constraints: false });
 db.sync();
 
 // helper function to save users review comments to the "Comments" table in the harbinger DB
@@ -206,28 +215,40 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
   id_user: idUser,
   id_review: idReview,
 });
+// .then((savedComment) => {
+//   console.log('comment successfully saved in DB');
+//   console.log(savedComment);
+// })
+// .catch((error) => { throw error; });
 
-const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
-  if (data === null) {
-    console.log('no keyword found');
-  } else {
-    return Review.findAll({
-      where: {
-        id: data.id_review,
-      },
-      include: [
-        {
-          model: Users,
-          required: true,
+/**
+ * Database helper to find reviews by keyword
+ */
+const findArticleByKeyWord = (keyword) => Keyword.findAll({
+  where: {
+    keyword,
+  },
+})
+  .then((data) => {
+    console.log('FOUND KEYWORDS: ', data);
+    if (data === null) {
+      console.log('KEYWORD NOT FOUND');
+    } else {
+      const id = data.map((result) => result.dataValues.ReviewId);
+      console.log('REVIEW IDS: ', id);
+      return Review.findAll({
+        where: {
+          id,
         },
-      ],
-    })
-      .then((data) => data)
-      .catch((err) => console.log(err, 'SOMETHING WENT WRONG'));
-  }
-});
+        include: { model: Keyword, as: 'keywords' },
+      })
+        .then((data) => data)
+        .catch((err) => console.log(err, 'SOMETHING WENT WRONG'));
+    }
+  })
+  .catch((err) => console.log('ERROR: ', err));
 
-const saveOrFindKeyWord = (keyword, idReview) => Keyword.create({ keyword, idReview })
+const saveOrFindKeyWord = (keyword, idReview) => Keyword.create({ keyword, ReviewId: idReview })
   .then((data) => data)
   .catch((err) => console.log(err));
 
@@ -268,29 +289,26 @@ const getUserReviews = (name) => Users.findOne({ where: { username: name } }).th
   .then((data) => data)
   .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
 
+
 const saveReview = (username, title, text, weburl, keyword, rating) => {
-  console.log('rating in saveReview ******************************************************************************************', rating);
   let idUser;
   let idWeb;
-  let idKeyword;
   return new Promise((resolve, reject) => {
-    saveOrFindKeyWord(keyword).then((data) => {
-      idKeyword = data.dataValues.id;
-      saveOrFindWebUrl(weburl).then((data) => {
-        idWeb = data.dataValues.id;
-        Users.findOne({ where: { username } }).then((data) => {
-          idUser = data.dataValues.id;
-          return Review.create({
-            likes: 0,
-            dislike: 0,
-            UserId: idUser,
-            title,
-            text,
-            rating,
-            WebUrlId: idWeb,
-            date: new Date(),
-          }).then((data) => resolve(data));
-        });
+
+    saveOrFindWebUrl(weburl).then((data) => {
+      idWeb = data.dataValues.id;
+      Users.findOne({ where: { username } }).then((data) => {
+        idUser = data.dataValues.id;
+        return Review.create({
+          likes: 0,
+          dislike: 0,
+          UserId: idUser,
+          title,
+          text,
+          rating,
+          WebUrlId: idWeb,
+          date: new Date(),
+        }).then((data) => resolve(data));
       });
     });
   });
@@ -307,10 +325,10 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
 
 
 /**
- * Database helper to find the reviews joins with User and WebUrl
+ * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
 const findTopReviews = () => new Promise((resolve, reject) => {
-  Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }] })
+  Review.findAll({ include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
     .then((data) => {
       resolve(data);
     })
@@ -319,10 +337,15 @@ const findTopReviews = () => new Promise((resolve, reject) => {
     });
 });
 
-const getReviewComments = (userId) => Comment.findAll({
-  where: {
-    id_user: userId,
-  },
+// db helper function to GET review comments from "Comments" table in the harbinger DB
+const getReviewComments = () => new Promise((resolve, reject) => {
+  Comment.findAll({ include: [{ model: Review, as: 'Review' }, { model: Users, as: 'User' }] })
+    .then((comments) => {
+      resolve(comments);
+    })
+    .catch((error) => {
+      reject(error);
+    });
 });
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
@@ -365,6 +388,7 @@ const getWebUrls = (webIds) => WebUrls.findAll({
 module.exports = {
   db,
   getUser,
+  getReviewComments,
   saveUsers,
   saveOrFindKeyWord,
   saveOrFindWebUrl,
@@ -380,3 +404,25 @@ module.exports = {
   findUserAndUpdateUsername,
   getWebUrls,
 };
+
+
+
+// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("google", "5", "2", "good site for used bike and tuba parts", "1", "1", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("nola.com", "1", "3", "good site for used bike and tuba parts", "1", "2", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("bikeforums", "2", "2", "good site for used bike and tuba parts", "1", "3", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// INSERT INTO reviews (title, likes, dislike, text, UserId, WebUrlId, date, createdAt, updatedAt) VALUES ("ebay", "5", "4", "good site for used bike and tuba parts", "1", "4", "1000-01-01 00:00:00", "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+
+// insert into WebUrls (url, createdAt, updatedAt) values ('https://google.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// insert into WebUrls (url, createdAt, updatedAt) values ('https://nola.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// insert into WebUrls (url, createdAt, updatedAt) values ('https://ebay.com', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+// insert into WebUrls (url, createdAt, updatedAt) values ('https://bikeforums.net', "1000-01-01 00:00:00", "9999-12-31 23:59:59");
+
+// insert into Keywords (keyword, ReviewId) values ('tuba', 3);
+// insert into Keywords (keyword, ReviewId) values ('bike', 3);
+// insert into Keywords (keyword, ReviewId) values ('parts', 3);
+// insert into Keywords (keyword, ReviewId) values ('part', 3);
+// insert into Keywords (keyword, ReviewId) values ('bike', 4);
+// insert into Keywords (keyword, ReviewId) values ('cycling', 4);
+// insert into Keywords (keyword, ReviewId) values ('news', 2);
+// insert into Keywords (keyword, ReviewId) values ('new orleans', 2);
+
