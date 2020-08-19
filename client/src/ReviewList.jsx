@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Review from './Review.jsx';
+import MakeComment from './MakeComment.jsx';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -29,7 +30,13 @@ const ReviewList = ({ userId }) => {
 
   return (
     <div>
-      {!reviews.length ? 'loading' : reviews.map((item) => <Review key={item.id} info={item} />)}
+      {!reviews.length ? 'loading' : reviews.map((item) => (
+        <div>
+          <Review key={item.id} info={item} />
+          <MakeComment />
+        </div>
+      ))}
+
     </div>
   );
 };
