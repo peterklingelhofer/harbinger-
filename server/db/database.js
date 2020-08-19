@@ -144,6 +144,9 @@ const Review = db.define('Review', {
   photourl: {
     type: Sequelize.STRING(500),
   },
+  hasRated: {
+    type: Sequelize.STRING(2020),
+  },
 });
 Review.sync();
 
@@ -287,7 +290,7 @@ const getUserReviews = (name) => Users.findOne({ where: { username: name } }).th
   .catch((err) => console.log(err, 'SOMETHING WENT WRONG')));
 
 
-const saveReview = (username, title, text, weburl, keyword, rating, photourl) => {
+const saveReview = (username, title, text, weburl, keyword, rating, photourl, hasRated) => {
   let idUser;
   let idWeb;
   return new Promise((resolve, reject) => {
@@ -295,7 +298,7 @@ const saveReview = (username, title, text, weburl, keyword, rating, photourl) =>
     saveOrFindWebUrl(weburl).then((data) => {
       idWeb = data.dataValues.id;
       Users.findOne({ where: { username } }).then((data) => {
-        idUser = data.dataValues.id;
+        idUser = data.id;
         return Review.create({
           likes: 0,
           dislike: 0,
@@ -306,6 +309,7 @@ const saveReview = (username, title, text, weburl, keyword, rating, photourl) =>
           WebUrlId: idWeb,
           date: new Date(),
           photourl,
+          hasRated: idUser,
         }).then((data) => resolve(data));
       });
     });
@@ -347,10 +351,27 @@ const getReviewComments = () => new Promise((resolve, reject) => {
 });
 
 const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
+  debugger;
+  Review.findOne({ where: { id: reviewId } })
+    .then((review) => {
+      const { likes, UserId, hasRated } = review;
+      let array = hasRated.split(',');
+      if (!(hasRated.split(',').includes(UserId.toString()))) {
+        review.update({ likes: likes + 1 }).then(() => {
+          resolve();
+        });
+      }
+    })
+    .catch(() => {
+      reject();
+    });
+});
+
+const updateHasRatedInReview = (reviewId, userId) => new Promise((resolve, reject) => {
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
       const { likes } = review;
-      review.update({ likes: likes + 1 }).then(() => {
+      review.update({ hasRated: userId }).then(() => {
         resolve();
       });
     })
@@ -398,6 +419,7 @@ module.exports = {
   findTopReviews,
   updateLikeInReview,
   updateDislikeInReview,
+  updateHasRatedInReview,
   getUserReviews,
   findUserAndUpdateUsername,
   getWebUrls,
