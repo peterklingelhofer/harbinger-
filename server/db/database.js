@@ -200,6 +200,18 @@ Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 db.sync();
 
+// helper function to save users review comments to the "Comments" table in the harbinger DB
+const saveReviewComments = (message, idUser, idReview) => Comment.create({
+  message,
+  id_user: idUser,
+  id_review: idReview,
+});
+  // .then((savedComment) => {
+  //   console.log('comment successfully saved in DB');
+  //   console.log(savedComment);
+  // })
+  // .catch((error) => { throw error; });
+
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
 
   if (data === null) {
@@ -366,6 +378,7 @@ module.exports = {
   saveUsers,
   saveOrFindKeyWord,
   saveOrFindWebUrl,
+  saveReviewComments,
   saveReview,
   findUserAndUpdateBio,
   findUserAndUpdateImage,
