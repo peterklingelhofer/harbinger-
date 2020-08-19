@@ -8,6 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
 import Rating from './Rating.jsx';
 
+// WHERE YOU WRITE REVIEWS
+
 function Reviews(props) {
   const { register, handleSubmit } = useForm();
   const [reviews, setRev] = useState([]);

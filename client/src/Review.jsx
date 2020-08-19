@@ -43,6 +43,16 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+const updateLike = (reviewId, type) => {
+  console.log(reviewId, type);
+
+  axios.put(`/review/update/type=${type}`, {
+    reviewId,
+  }).then(() => {
+    console.log('posted');
+  });
+};
+
 /**
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
@@ -79,7 +89,7 @@ const Review = ({ info }) => (
         </a>
         <div style={{ padding: '20px' }}>
           <>
-            <Rating defaultStars={info.rating} />
+            <Rating defaultStars={info.rating} alreadyRated />
           </>
           <div style={{ display: 'inline-block', marginLeft: '20px' }}>
             <LikeBG
@@ -112,7 +122,9 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        console.log(info.likes);
+        // console.log(info.likes);
+        // console.log(info.id);
+        updateLike(info.id, like);
       }}
     >
       <MyButton>Helpful</MyButton>
@@ -120,7 +132,9 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        console.log(info.dislike);
+        // console.log(info.dislike);
+        // console.log(info.id);
+        updateLike(info.id, dislike);
       }}
     >
       <MyButton>Unhelpful</MyButton>
