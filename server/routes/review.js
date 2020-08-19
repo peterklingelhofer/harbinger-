@@ -82,6 +82,8 @@ reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
       const { text, title, weburl, keyword, rating, photourl } = req.body;
+      console.log('******************PHOTOURL', photourl);
+      console.log('**************PHOTOTYPE', typeof photourl);
       return saveReview(
         data.dataValues.username,
         title,

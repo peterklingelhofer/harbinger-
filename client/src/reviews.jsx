@@ -132,7 +132,7 @@ function Reviews(props) {
         return axios.post('/review/submit', {
           text: data,
           weburl: siteURL,
-          photourl: url,
+          photourl: url.data,
           title: document.getElementById('title').value,
           keyword: document.getElementById('keyword').value,
           rating: starsSelected,
