@@ -15,6 +15,7 @@ const { loginRoute } = require('./routes/login');
 const { reviewRoute } = require('./routes/review');
 const { userProfile } = require('./routes/userProfile');
 const { getUser } = require('./db/database');
+const { reviewComments } = require('./routes/comments');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,6 +38,7 @@ app.use('/profile', profileRoute);
 // app.use('/', express.static(path.resolve(__dirname, '../client/dist')));
 app.use('/review', reviewRoute);
 app.use('/user', userProfile);
+app.use('/review', reviewComments);
 
 
 let loggedin = false;
