@@ -216,7 +216,6 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
 // })
 // .catch((error) => { throw error; });
 
-
 /**
  * Database helper to find reviews by keyword
  */

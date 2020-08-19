@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core';
+import Rating from './Rating.jsx';
 
 const ImageBG = styled(Box)({
   borderRadius: 7,
@@ -49,42 +50,80 @@ const MyButton = styled(Button)({
 const Review = ({ info }) => (
   <div>
     <ImageBG width="200">
-      <div >
-        <img src={info.User.image} style={{ position: 'absolute', marginBottom: "20px", boxShadow: '0 3px 10px 2px gray', }} width='150px' height='150px' />
+      <div>
+        <img
+          src={info.User.image}
+          style={{
+            position: 'absolute',
+            marginBottom: '20px',
+            boxShadow: '0 3px 10px 2px gray',
+          }}
+          width="150px"
+          height="150px"
+        />
         <TitleBox>
-          <h1 style={{ marginLeft: "200px", padding: "0px", color: "white" }}>{info.title}</h1>
+          <h1 style={{ marginLeft: '200px', padding: '0px', color: 'white' }}>
+            {info.title}
+          </h1>
         </TitleBox>
-        <Link to={{ pathname: `/userProfile/name=${info.User.username}`, }}>
-          <h4 style={{ marginLeft: "170px", padding: "0px" }}>
+        <Link to={{ pathname: `/userProfile/name=${info.User.username}` }}>
+          <h4 style={{ marginLeft: '170px', padding: '0px' }}>
             {info.User.username || 'Jim'}'s Profile
           </h4>
         </Link>
-        <a href={info.WebUrl.url} style={{ marginLeft: "170px", padding: "0px" }}>{info.WebUrl.url}</a>
-        <div style={{ padding: "20px" }}>
-          <div style={{ display: 'inline-block', marginLeft: "20px" }}>
-            <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-              <h4 style={{}}>Likes:{info.likes}</h4>
+        <a
+          href={info.WebUrl.url}
+          style={{ marginLeft: '170px', padding: '0px' }}
+        >
+          {info.WebUrl.url}
+        </a>
+        <div style={{ padding: '20px' }}>
+          <>
+            <Rating defaultStars={info.rating} />
+          </>
+          <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+            <LikeBG
+              style={{ maxHeight: '20px', maxWidth: '400px', color: 'white' }}
+            >
+              <h4 style={{}}>Helpful:{info.likes}</h4>
             </LikeBG>
-            <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
-              <h4>{' '}Dislikes:{info.dislike}</h4>
+            <DikeBG
+              style={{ maxHeight: '20px', maxWidth: '400px', color: 'white' }}
+            >
+              <h4> Unhelpful:{info.dislike}</h4>
             </DikeBG>
           </div>
-          <div style={{ maxWidth: "700px", marginLeft: "50px", marginBottom: "30px", positon: "absolute", padding: "12px", display: 'inline-block' }}>{info.text}</div>
+          <div
+            style={{
+              maxWidth: '700px',
+              marginLeft: '50px',
+              marginBottom: '30px',
+              positon: 'absolute',
+              padding: '12px',
+              display: 'inline-block',
+            }}
+          >
+            {info.text}
+          </div>
         </div>
-        <img height="10" style={{ marginTop: "20px" }}></img>
+        <img height="10" style={{ marginTop: '20px' }}></img>
       </div>
     </ImageBG>
     <button
       type="submit"
-      onClick={() => { console.log(info.likes); }}
+      onClick={() => {
+        console.log(info.likes);
+      }}
     >
-      <MyButton>like</MyButton>
+      <MyButton>Helpful</MyButton>
     </button>
     <button
       type="submit"
-      onClick={() => { console.log(info.dislike); }}
+      onClick={() => {
+        console.log(info.dislike);
+      }}
     >
-      <MyButton>dislike</MyButton>
+      <MyButton>Unhelpful</MyButton>
     </button>
   </div>
 );
@@ -97,6 +136,7 @@ Review.proptypes = {
     likes: PropTypes.number.isRequired,
     dislikes: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
+    rating: PropTypes.number.isRequired,
     User: PropTypes.shape({
       username: PropTypes.string.isRequired,
       image: PropTypes.string,
