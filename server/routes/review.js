@@ -13,6 +13,8 @@ const {
 } = require('../db/database');
 const { rest } = require('lodash');
 
+const uploadImage = require('./upload');
+
 const reviewRoute = Router();
 let changer = '';
 reviewRoute.get('/url', (req, res) => {
@@ -53,6 +55,26 @@ reviewRoute.get('/retrieve', (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
+});
+
+/**
+ * Uploads an image to our bucket use formData to send a file
+ * @param {File} file the file you want to upload
+ * @returns {String} the url to the uploaded file
+ */
+reviewRoute.post('/upload', (req, res) => {
+  if (!req.user) {
+    const fileToUpload = req.file;
+    uploadImage(fileToUpload)
+      .then((url) => {
+        res.status(201).send(url);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  } else {
+    res.status(401).send(null);
+  }
 });
 
 // Saves a review and its keywords to the db (user and url saved to db in db file)

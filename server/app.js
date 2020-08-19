@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
+const multer = require('multer');
 require('./passport-setup');
 
 const passport = require('passport');
@@ -17,10 +18,18 @@ const { userProfile } = require('./routes/userProfile');
 const { getUser } = require('./db/database');
 const { reviewComments } = require('./routes/comments');
 
+const multerMid = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.disable('x-powered-by');
+app.use(multerMid.single('file'));
 // per video tutorial @ 6:19
 // figure out which dynamic values to give name and keys
 app.use(

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
@@ -43,6 +44,16 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+const updateLike = (reviewId, type) => {
+  axios
+    .put(`/review/update/type=${type}`, {
+      reviewId,
+    })
+    .then(() => {
+      console.log('posted:', reviewId, type);
+    });
+};
+
 /**
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
@@ -79,7 +90,7 @@ const Review = ({ info }) => (
         </a>
         <div style={{ padding: '20px' }}>
           <>
-            <Rating defaultStars={info.rating} />
+            <Rating defaultStars={info.rating} alreadyRated />
           </>
           <div style={{ display: 'inline-block', marginLeft: '20px' }}>
             <LikeBG
@@ -112,7 +123,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        console.log(info.likes);
+        updateLike(info.id, 'like');
       }}
     >
       <MyButton>Helpful</MyButton>
@@ -120,7 +131,7 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        console.log(info.dislike);
+        updateLike(info.id, 'dislike');
       }}
     >
       <MyButton>Unhelpful</MyButton>
