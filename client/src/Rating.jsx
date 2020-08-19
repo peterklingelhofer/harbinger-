@@ -16,8 +16,9 @@ export default function Rating() {
           onSelect={() => setStarsSelected(i + 1)}
         />
       ))}
+      &nbsp;
       {starsSelected}
-      of 5 stars
+      &nbsp;of 5 stars
     </>
   );
 }

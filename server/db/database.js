@@ -169,12 +169,36 @@ const Keyword = db.define('Keyword', {
 });
 Keyword.sync();
 
+// created new table in DB to persist users comments on other users website reviews
+const Comment = db.define('Comment', {
+  id: { // sqeualize id number auto generated
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  message: { // users typed comment on reviews
+    type: Sequelize.STRING(256),
+  },
+  id_user: { // id number of specific user making comment
+    type: Sequelize.INTEGER,
+    foreignKey: true,
+  },
+  // figure out what other fields are needed in this table and what other tables it must connect to
+  id_review: { // id number of review to link user comment with
+    type: Sequelize.INTEGER,
+    foreignKey: true,
+  },
+});
+Comment.sync();
+
 // TESTING TO SEE IF I CAN FIX DB LINKS
 Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 db.sync();
 
 const findArticleByKeyWord = (keyword) => Keyword.findOne({ where: { keyword } }).then((data) => {
+
   if (data === null) {
     console.log('no keyword found');
   } else {
@@ -330,7 +354,6 @@ const getWebUrls = (webIds) => WebUrls.findAll({
     id: webIds,
   },
 });
-
 
 module.exports = {
   db,

@@ -13,7 +13,6 @@ const { webSearchApiClient } = require('../azure.js');
 searchRoute.post('/search', (req, res) => {
   let bingSearch;
   let dbSearch;
-
   if (req.user) {
     webSearchApiClient.web
       .search(req.body.clientSearch)
@@ -28,31 +27,31 @@ searchRoute.post('/search', (req, res) => {
       .catch((err) => {
         throw err;
       })
-      .then(() => findArticleByKeyWord(req.body.clientSearch)
-        .then((data) => {
-          if (data !== undefined) {
-            const webUrls = [];
-            // console.log(data[0].dataValues);
-            const webIds = data.map((review) => review.dataValues.id_web);
-            //console.log(webIds, 'this is a review!');
-            getWebUrls(webIds)
-              .then((websites) => {
-                webIds.forEach((webId) => {
-                  websites.forEach((webObj) => {
-                    if (webObj.dataValues.id === webId) {
-                      webUrls.push(webObj.dataValues.url);
-                    }
-                  });
+      .then(() => findArticleByKeyWord(req.body.clientSearch))
+      .then((data) => {
+        if (data !== undefined) {
+          const webUrls = [];
+          // console.log(data[0].dataValues);
+          const webIds = data.map((review) => review.dataValues.id_web);
+          //console.log(webIds, 'this is a review!');
+          getWebUrls(webIds)
+            .then((websites) => {
+              webIds.forEach((webId) => {
+                websites.forEach((webObj) => {
+                  if (webObj.dataValues.id === webId) {
+                    webUrls.push(webObj.dataValues.url);
+                  }
                 });
-                console.log(webUrls);
-                dbSearch = data;
-                res.send([bingSearch, dbSearch, webUrls]);
               });
-          } else {
-            res.send([bingSearch, dbSearch]);
-          }
-        })
-        .catch((err) => console.log(err, 'YOURE NOT GOOD AT PROMISES')));
+              console.log(webUrls);
+              dbSearch = data;
+              res.send([bingSearch, dbSearch, webUrls]);
+            });
+        } else {
+          res.send([bingSearch, dbSearch]);
+        }
+      })
+      .catch((err) => console.log(err, 'YOURE NOT GOOD AT PROMISES'));
   } else {
     res.status(401);
     res.send('unauthorized');

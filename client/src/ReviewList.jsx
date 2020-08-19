@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Review from './Review.jsx';
 
+/**
+ * A component for holding a list of the reviews. It makes the database call and
+ *  maps the indiviual review componenets to the page
+ */
 const ReviewList = () => {
   const [reviews, setReviews] = useState([]);
 

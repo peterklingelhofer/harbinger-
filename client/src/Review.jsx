@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -41,6 +42,10 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+/**
+ * A component to display an individual review
+ * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
+ */
 const Review = ({ info }) => (
   <div>
     <ImageBG width="200">
@@ -85,3 +90,19 @@ const Review = ({ info }) => (
 );
 
 export default Review;
+
+Review.proptypes = {
+  info: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    dislikes: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    User: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      image: PropTypes.string,
+    }),
+    WebUrl: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+    }),
+  }),
+};

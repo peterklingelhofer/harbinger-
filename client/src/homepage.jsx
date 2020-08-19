@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  BrowserRouter as Router, Switch, Route, Link,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { styled, Backdrop } from '@material-ui/core';
+import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
 import { useForm } from 'react-hook-form';
 import Search from './search.jsx';
 import ReviewList from './ReviewList.jsx';
@@ -36,72 +33,11 @@ function HomePage() {
     color: 'red',
   });
 
-  const ReviewBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 5px 2px #b81a06',
-    backgroundColor: '#FAEBD7',
-    color: 'black',
-  });
-
-
-  const LikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#9ACD32',
-    color: 'black',
-  });
-
-  const DikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#F08080',
-  });
-
-  const ImageBG = styled(Box)({
-    borderRadius: 7,
-    boxShadow: '0 1px 30px 0px gray',
-    color: 'black',
-  });
-
-  const TitleBox = styled(Box)({
-    background: 'linear-gradient(45deg, #FE6534 30%, #FCD98D 90%)',
-    borderRadius: 7,
-    color: 'black',
-  });
-
   useEffect(() => {
     axios.get('/good').then(({ data }) => {
       setUser(data);
     });
   }, []);
-
-  const [topReviews, setTop] = useState([]);
-
-  useEffect(() => {
-    axios.get('/review/retrieve').then((reviews) => {
-      console.log(reviews.data, 'Top');
-      const topArray = [];
-      reviews.data[1].forEach((review, index) => {
-        review.username = reviews.data[0][index];
-        review.webUrl = reviews.data[2][index];
-        review.image = reviews.data[3][index];
-        topArray.push(review);
-      });
-      setTop(topArray);
-    });
-  }, []);
-
-  const [bottomReviews, setBottom] = useState([]);
-
-  // useEffect(() => {
-  //   axios.get('/review/retrieve/id=bottom').then((data) => {
-  //     //console.log(data);
-  //     setBottom(data);
-  //   });
-  // }, []);
 
   const updateLike = (reviewId, type) => {
     //console.log(reviewId, type);
