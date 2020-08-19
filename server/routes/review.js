@@ -6,6 +6,7 @@ const {
   getUser,
   findTopReviews,
   updateLikeInReview,
+  updateHasRatedInReview,
   updateDislikeInReview,
   saveOrFindWebUrl,
   saveOrFindKeyWord,
@@ -41,9 +42,10 @@ reviewRoute.post('/url', (req, res) => {
 // Keyword is the keyword to search by
 reviewRoute.get('/retrieve/:keyword', (req, res) => {
   const { keyword } = req.params;
-  findArticleByKeyWord(keyword).then((data) => {
-    res.status(200).send(data);
-  })
+  findArticleByKeyWord(keyword)
+    .then((data) => {
+      res.status(200).send(data);
+    })
     .catch((err) => {
       res.status(500).send(err);
     });
@@ -83,7 +85,15 @@ reviewRoute.post('/upload', (req, res) => {
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
-      const { text, title, weburl, keyword, rating, photourl } = req.body;
+      const {
+        text,
+        title,
+        weburl,
+        keyword,
+        rating,
+        photourl,
+        id
+      } = req.body;
       return saveReview(
         data.dataValues.username,
         title,
@@ -92,18 +102,21 @@ reviewRoute.post('/submit', (req, res) => {
         keyword,
         rating,
         photourl,
-      ).then((data) => {
-        const keywords = keyword.toLowerCase().split(', ').map((chunk) => {
-          return chunk.split(',');
-        }).flat();
-        const saveKeywords = keywords.map((keyword) => {
-          return saveOrFindKeyWord(
-            keyword,
-            data.dataValues.id,
-          );
-        });
-        return Promise.all(saveKeywords);
-      })
+        id
+      )
+        .then((data) => {
+          const keywords = keyword
+            .toLowerCase()
+            .split(', ')
+            .map((chunk) => {
+              return chunk.split(',');
+            })
+            .flat();
+          const saveKeywords = keywords.map((keyword) => {
+            return saveOrFindKeyWord(keyword, data.dataValues.id);
+          });
+          return Promise.all(saveKeywords);
+        })
         .then(() => {
           res.status(201);
           res.send('review POST');
@@ -116,11 +129,25 @@ reviewRoute.post('/submit', (req, res) => {
 });
 reviewRoute.put('/update/:type', (req, res) => {
   if (req.params.type === 'type=like') {
-    updateLikeInReview(req.body.reviewId).then(() => {
-      console.log('review updated!');
-      res.status(204);
-      res.end();
-    });
+    updateLikeInReview(req.body.reviewId)
+      .then(() => {
+        console.log('review updated!');
+        res.status(204);
+        res.end();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  } else if (req.params.type === 'type=hasRated') {
+    updateHasRatedInReview(req.body.reviewId)
+      .then(() => {
+        console.log('hasRated updated');
+        res.status(204);
+        res.end();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   } else {
     updateDislikeInReview(req.body.reviewId).then(() => {
       console.log('review updated!');
