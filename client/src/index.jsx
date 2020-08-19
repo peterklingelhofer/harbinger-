@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './app.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './app.jsx';
 // import {
 //     BrowserRouter as Router,
 //     Switch,
@@ -8,7 +8,6 @@ import App from './app.jsx'
 //     Link
 //   } from "react-router-dom";
 
+ReactDOM.render(<App />, document.getElementById('app'));
 
-ReactDOM.render(<App />, document.getElementById('app'));  
-
-//index.jsx houses the app for webpack bundle.
+// index.jsx houses the app for webpack bundle.
