@@ -5,7 +5,7 @@ const Star = ({ selected = false, onSelect = (x) => x }) => (
   <FaStar color={selected ? 'yellow' : 'grey'} onClick={onSelect} />
 );
 
-export default function Rating({ checkRating, defaultStars }) {
+export default function Rating({ checkRating, defaultStars, alreadyRated }) {
   const currentStars = defaultStars || 0;
   const [starsSelected, setStarsSelected] = useState(currentStars);
   console.log(defaultStars);
@@ -20,7 +20,7 @@ export default function Rating({ checkRating, defaultStars }) {
         <Star
           key={i}
           selected={starsSelected > i}
-          onSelect={() => setStarsSelected(i + 1)}
+          onSelect={() => { if (!alreadyRated) { setStarsSelected(i + 1); } }}
         />
       ))}
       &nbsp;
