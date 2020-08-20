@@ -88,7 +88,10 @@ const updateLike = (reviewId, type, user) => {
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info, setUpdateHelpfulness }) => {
+const Review = ({ info, setUpdateHelpfulness, passTagClick }) => {
+  const continueTagClick = (tag) => {
+    passTagClick(tag);
+  };
   return (
     <div>
       <ImageBG width="200">
@@ -132,7 +135,7 @@ const Review = ({ info, setUpdateHelpfulness }) => {
               }}
             >
               {info.keywords.map((item) => (
-                <Keyword key={item.KeywordId} keyword={item.keyword} />
+                <Keyword key={item.KeywordId} keyword={item.keyword} handleTagClick={continueTagClick} />
               ))}
             </div>
           </KeywordBox>
