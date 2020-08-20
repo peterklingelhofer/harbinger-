@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -68,27 +68,42 @@ const KeywordBox = styled(Box)({
   fontWeight: 'bold',
 });
 
-const updateLike = (reviewId, type, user) => {
-  const { id } = user;
-  axios
-    .put(`/review/update/type=${type}`, {
-      reviewId,
-      userId: id,
-    })
-    .then(() => {
-      // if (type === 'like') {
-      //   updatedLikes = 1;
-      // } else {
-      //   updatedDislikes = 1;
-      // }
-    });
-};
-
 /**
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info, setUpdateHelpfulness }) => {
+const Review = ({ info }) => {
+  const [likeState, setLikeState] = useState(info.likes);
+  const [dislikeState, setDislikeState] = useState(info.dislike);
+
+  const updateLike = (reviewId, type, user) => {
+    const { id } = user;
+    axios
+      .put(`/review/update/type=${type}`, {
+        reviewId,
+        userId: id,
+      })
+      .then((response) => {
+        console.log('updateLike then:', response);
+        const { data } = response;
+        console.log(data);
+        // if value was updated:
+        if (data) {
+          // if it was a like
+          if (type === 'like') {
+            const newLikeState = likeState + 1;
+            setLikeState(newLikeState);
+            // if it was a dislike:
+          } else {
+            const newDislikeState = dislikeState + 1;
+            setDislikeState(newDislikeState);
+          }
+        }
+      });
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <div>
       <ImageBG width="200">
@@ -141,14 +156,14 @@ const Review = ({ info, setUpdateHelpfulness }) => {
             <div style={{ display: 'inline-block', marginLeft: '20px' }}>
               <LikeBG>
                 <h4>
-                  Helpful:
-                  {info.likes}
+                  Helpful:&nbsp;
+                  {likeState}
                 </h4>
               </LikeBG>
               <DikeBG>
                 <h4>
-                  Unhelpful:
-                  {info.dislike}
+                  Unhelpful:&nbsp;
+                  {dislikeState}
                 </h4>
               </DikeBG>
             </div>
@@ -161,7 +176,6 @@ const Review = ({ info, setUpdateHelpfulness }) => {
         type="submit"
         onClick={() => {
           updateLike(info.id, 'like', info.User);
-          setUpdateHelpfulness(Math.random())
         }}
       >
         <MyButton>Helpful</MyButton>
@@ -170,7 +184,6 @@ const Review = ({ info, setUpdateHelpfulness }) => {
         type="submit"
         onClick={() => {
           updateLike(info.id, 'dislike');
-          setUpdateHelpfulness(Math.random())
         }}
       >
         <MyButton>Unhelpful</MyButton>
