@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Review from './Review.jsx';
 import MakeComment from './MakeComment.jsx';
+import DisplayComment from './DisplayComment.jsx';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -64,14 +65,12 @@ const ReviewList = ({ userId, userId4Comments }) => {
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div key={item.id}>
-          <Review
-            info={item}
-            passTagClick={onTagClick}
-          />
+          <Review info={item} passTagClick={onTagClick} />
+          <br />
+          <DisplayComment />
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
-
     </div>
   );
 };
