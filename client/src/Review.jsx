@@ -68,7 +68,6 @@ const KeywordBox = styled(Box)({
   fontWeight: 'bold',
 });
 
-
 const updateLike = (reviewId, type, user) => {
   const { id } = user;
   axios
@@ -77,7 +76,11 @@ const updateLike = (reviewId, type, user) => {
       userId: id,
     })
     .then(() => {
-      // console.log('reviewId:', reviewId, type);
+      // if (type === 'like') {
+      //   updatedLikes = 1;
+      // } else {
+      //   updatedDislikes = 1;
+      // }
     });
 };
 
@@ -85,84 +88,96 @@ const updateLike = (reviewId, type, user) => {
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info }) => (
-  <div>
-    <ImageBG width="200">
-      <div>
-        <img
-          src={info.photourl}
-          style={{
-            position: 'absolute',
-            marginBottom: '20px',
-            boxShadow: '0 3px 10px 2px gray',
-          }}
-          width="150px"
-          height="150px"
-        />
-        <TitleBox>
-          <h1 style={{ marginLeft: '200px', padding: '0px', color: 'white' }}>
-            {info.title}
-          </h1>
-        </TitleBox>
-        <Link to={{ pathname: `/userProfile/name=${info.User.username}` }}>
-          <h4 style={{ marginLeft: '170px', padding: '0px' }}>
-            {info.User.username || 'Jim'}
-            's Profile
-          </h4>
-        </Link>
-        <a
-          href={info.WebUrl.url}
-          style={{ marginLeft: '170px', padding: '0px' }}
-        >
-          {info.WebUrl.url}
-        </a>
-        <KeywordBox>
-          tags
-          <div style={{ marginTop: '3px', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline', fontWeight: 'normal' }}>
-            {info.keywords.map((item) => <Keyword key={item.KeywordId} keyword={item.keyword} />)}
+const Review = ({ info, setUpdateHelpfulness }) => {
+  return (
+    <div>
+      <ImageBG width="200">
+        <div>
+          <img
+            src={info.photourl}
+            style={{
+              position: 'absolute',
+              marginBottom: '20px',
+              boxShadow: '0 3px 10px 2px gray',
+            }}
+            width="150px"
+            height="150px"
+          />
+          <TitleBox>
+            <h1 style={{ marginLeft: '200px', padding: '0px', color: 'white' }}>
+              {info.title}
+            </h1>
+          </TitleBox>
+          <Link to={{ pathname: `/userProfile/name=${info.User.username}` }}>
+            <h4 style={{ marginLeft: '170px', padding: '0px' }}>
+              {info.User.username || 'Jim'}
+              's Profile
+            </h4>
+          </Link>
+          <a
+            href={info.WebUrl.url}
+            style={{ marginLeft: '170px', padding: '0px' }}
+          >
+            {info.WebUrl.url}
+          </a>
+          <KeywordBox>
+            tags
+            <div
+              style={{
+                marginTop: '3px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                textDecoration: 'underline',
+                fontWeight: 'normal',
+              }}
+            >
+              {info.keywords.map((item) => (
+                <Keyword key={item.KeywordId} keyword={item.keyword} />
+              ))}
+            </div>
+          </KeywordBox>
+          <div style={{ padding: '20px' }}>
+            <Rating defaultStars={info.rating} alreadyRated />
+            <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+              <LikeBG>
+                <h4>
+                  Helpful:
+                  {info.likes}
+                </h4>
+              </LikeBG>
+              <DikeBG>
+                <h4>
+                  Unhelpful:
+                  {info.dislike}
+                </h4>
+              </DikeBG>
+            </div>
+            <TextBox>{info.text}</TextBox>
           </div>
-        </KeywordBox>
-        <div style={{ padding: '20px' }}>
-          <Rating defaultStars={info.rating} alreadyRated />
-          <div style={{ display: 'inline-block', marginLeft: '20px' }}>
-            <LikeBG>
-              <h4>
-                Helpful:
-                {info.likes}
-              </h4>
-            </LikeBG>
-            <DikeBG>
-              <h4>
-                Unhelpful:
-                {info.dislike}
-              </h4>
-            </DikeBG>
-          </div>
-          <TextBox>
-            {info.text}
-          </TextBox>
+          <img height="10" style={{ marginTop: '20px' }}></img>
         </div>
-        <img height="10" style={{ marginTop: '20px' }}></img>
-      </div>
-    </ImageBG>
-    <button
-      type="submit"
-      onClick={() => {
-        updateLike(info.id, 'like', info.User);
-      }}
-    >
-      <MyButton>Helpful</MyButton>
-    </button>
-    <button
-      type="submit"
-      onClick={() => {
-        updateLike(info.id, 'dislike');
-      }}
-    >
-      <MyButton>Unhelpful</MyButton>
-    </button>
-  </div>
-);
+      </ImageBG>
+      <button
+        type="submit"
+        onClick={() => {
+          updateLike(info.id, 'like', info.User);
+          setUpdateHelpfulness(Math.random())
+        }}
+      >
+        <MyButton>Helpful</MyButton>
+      </button>
+      <button
+        type="submit"
+        onClick={() => {
+          updateLike(info.id, 'dislike');
+          setUpdateHelpfulness(Math.random())
+        }}
+      >
+        <MyButton>Unhelpful</MyButton>
+      </button>
+    </div>
+  );
+};
 
 export default Review;
 
