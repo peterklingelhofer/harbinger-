@@ -120,19 +120,29 @@ function Reviews(props) {
   // Submits a review
   const onSubmit = (data) => {
     const formData = new FormData();
-    formData.append('file', file.file);
-    axios({
-      method: 'post',
-      url: '/review/upload',
-      data: formData,
-      headers: { 'Content-type': 'multipart/form-data' },
-    })
-      .then((url) => {
-        console.log('SUCCESS URL', url);
+    let config;
+    if (!file) {
+      config = {
+        method: 'post',
+        url: `https://screenshotapi.net/api/v1/screenshot?url=medium.com&token=${process.env.SCREENSHOT_API}`,
+      };
+    } else {
+      formData.append('file', file.file);
+      config = {
+        method: 'post',
+        url: '/review/upload',
+        data: formData,
+        headers: { 'Content-type': 'multipart/form-data' },
+      };
+    }
+    axios(config)
+      .then((response) => {
+        const photourl = response.data.screenshot || response.data.url;
+        console.log(photourl);
         return axios.post('/review/submit', {
           text: data,
           weburl: siteURL,
-          photourl: url.data,
+          photourl,
           title: document.getElementById('title').value,
           keyword: document.getElementById('keyword').value,
           rating: starsSelected,
