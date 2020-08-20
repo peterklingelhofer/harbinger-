@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 
-export default function Keyword ({ keyword }) {
+export default function Keyword ({ keyword, handleTagClick }) {
 
-  const handleTagClick = (keyword) => {
-    console.log('e.target.id: ', keyword);
-    axios({
-      method: 'get',
-      url: `/review/retrieve/${keyword}`,
-    })
-      .then(({ data }) => {
-        console.log("DATABASE KEYWORD SEARCH RETURN: ", data);
-        setReviews(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+const handleClick = (tag) => {
+  handleTagClick(tag);
+};
 
   return (
-    <div id={keyword} onClick={(e) => {handleTagClick(e.target.id)}}>
+    <div id={keyword} onClick={(e) => {handleClick(e.target.id)}} onKeyDown={(e) => {e.keyCode === 13 || 32 ? handleTagClick(e.target.id) : '' }}>
       {keyword}
     </div>
   )
