@@ -9,12 +9,12 @@ import { useForm } from 'react-hook-form';
  * to save user review comments in the Comments table of the db.
  * Review comments are displayed inside of the user website review they are linked with
  */
-const MakeComment = ({ userId, userId4Comments, ReviewId }) => {
+const MakeComment = ({ userId4Comments, ReviewId }) => {
   const [value, setValue] = useState('');
   
   const saveComment = (event) => {
-    console.log(userId4Comments);
-    console.log('************saveComment***************');
+    // console.log(userId4Comments);
+    // console.log('************saveComment***************');
     event.preventDefault();
     // { message: value, UserId: , ReviewId: }
     axios.post('/review/comments', { message: value, UserId: userId4Comments, ReviewId })
