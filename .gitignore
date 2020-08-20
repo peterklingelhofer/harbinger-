@@ -6,5 +6,5 @@ bundle.js
 .gcloudignore
 app.yaml
 gCloudConfig.json
-client/dist
+client/dist/
 .cache

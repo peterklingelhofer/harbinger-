@@ -137,11 +137,12 @@ function Reviews(props) {
     }
     axios(config)
       .then((response) => {
-        console.log('SUCCESS URL', response.data);
+        const photourl = response.data.screenshot || response.data.url;
+        console.log(photourl);
         return axios.post('/review/submit', {
           text: data,
           weburl: siteURL,
-          photourl: response.data.url,
+          photourl,
           title: document.getElementById('title').value,
           keyword: document.getElementById('keyword').value,
           rating: starsSelected,
