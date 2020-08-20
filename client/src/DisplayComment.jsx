@@ -8,7 +8,7 @@ import axios from 'axios';
  * Review comments are displayed inside of the user website review they are linked with.
  */
 const DisplayComment = () => {
-  const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     axios({
@@ -17,6 +17,7 @@ const DisplayComment = () => {
     })
       .then(({ data }) => {
         console.log(data);
+        setComments(data);
       })
       .catch((err) => {
         console.error(err);
@@ -25,7 +26,22 @@ const DisplayComment = () => {
 
   return (
     <div>
-      {!reviews.length ? 'loading' : reviews.map((item) => <Review key={item.id} info={item} />)}
+      <h3>User Review Comments</h3>
+      {!comments.length ? 'no review comments yet' : comments.map((comment) => (
+        <div
+          style={{
+            borderStyle: 'ridge',
+            borderColor: 'grey',
+            maxWidth: '1000px',
+            paddingLeft: '10px',
+          }}
+          key={comment.id}
+        >
+          <img src={comment.Review.photourl} alt="Can't load file" width="100" height="100" />
+          <figcaption style={{ fontWeight: 'bold' }}>{comment.User.username}</figcaption>
+          <p style={{ fontFamily: 'Arial' }}>{comment.message}</p>
+        </div>
+      ))}
     </div>
   );
 };

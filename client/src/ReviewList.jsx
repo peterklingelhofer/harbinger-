@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Review from './Review.jsx';
 import MakeComment from './MakeComment.jsx';
+import DisplayComment from './DisplayComment.jsx';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -26,7 +27,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
           return ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike));
         });
         setReviews(sortReviews.reverse());
-        console.log(sortReviews.reverse());
+        // console.log(sortReviews.reverse());
       })
       .catch((err) => {
         console.error(err);
@@ -38,7 +39,9 @@ const ReviewList = ({ userId, userId4Comments }) => {
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
           <Review key={item.id} info={item} />
-          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id}/>
+          <br />
+          <DisplayComment />
+          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
 
