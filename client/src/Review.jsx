@@ -61,13 +61,11 @@ const updateLike = (reviewId, type, user) => {
   axios
     .put(`/review/update/type=${type}`, {
       reviewId,
+      userId: id,
     })
     .then(() => {
-      console.log('userId:', reviewId, type);
-    })
-    .put(`/review/update/type=hasRated`, {
-      id,
-    })
+      // console.log('reviewId:', reviewId, type);
+    });
 };
 
 /**

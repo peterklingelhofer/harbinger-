@@ -147,7 +147,7 @@ const Review = db.define('Review', {
     type: Sequelize.STRING(500),
   },
   hasRated: {
-    type: Sequelize.STRING(2020),
+    type: Sequelize.STRING(9000),
   },
 });
 Review.sync();
@@ -206,7 +206,6 @@ const Comment = db.define('Comment', {
 });
 Comment.sync();
 
-// TESTING TO SEE IF I CAN FIX DB LINKS
 Review.belongsTo(Users, { as: 'User', constraints: false });
 Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
@@ -292,7 +291,6 @@ const saveReview = (username, title, text, weburl, keyword, rating, photourl, ha
   let idUser;
   let idWeb;
   return new Promise((resolve, reject) => {
-
     saveOrFindWebUrl(weburl).then((data) => {
       idWeb = data.dataValues.id;
       Users.findOne({ where: { username } }).then((data) => {
@@ -307,7 +305,7 @@ const saveReview = (username, title, text, weburl, keyword, rating, photourl, ha
           WebUrlId: idWeb,
           date: new Date(),
           photourl,
-          hasRated: idUser,
+          hasRated,
         }).then((data) => resolve(data));
       });
     });
@@ -322,7 +320,6 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
   .then((user) => user.update({ image }))
   .then((data) => data)
   .catch((err) => console.log(err));
-
 
 /**
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
@@ -349,14 +346,16 @@ const getReviewComments = () => new Promise((resolve, reject) => {
     });
 });
 
-const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
-  debugger;
+const updateLikeInReview = (req) => new Promise((resolve, reject) => {
+  const { body } = req;
+  const { reviewId, userId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
-      const { likes, UserId, hasRated } = review;
-      let array = hasRated.split(',');
-      if (!(hasRated.split(',').includes(UserId.toString()))) {
-        review.update({ likes: likes + 1 }).then(() => {
+      const { likes, hasRated } = review;
+      const arrayHasRated = hasRated.split(',');
+      if (!(arrayHasRated.includes((req.user).toString()))) {
+        const updatedHasRated = `${hasRated}, ${req.user}`;
+        review.update({ likes: likes + 1, hasRated: updatedHasRated }).then(() => {
           resolve();
         });
       }
@@ -366,26 +365,19 @@ const updateLikeInReview = (reviewId) => new Promise((resolve, reject) => {
     });
 });
 
-const updateHasRatedInReview = (reviewId, userId) => new Promise((resolve, reject) => {
+const updateDislikeInReview = (req) => new Promise((resolve, reject) => {
+  const { body } = req;
+  const { reviewId, userId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
-      const { likes } = review;
-      review.update({ hasRated: userId }).then(() => {
-        resolve();
-      });
-    })
-    .catch(() => {
-      reject();
-    });
-});
-
-const updateDislikeInReview = (reviewId) => new Promise((resolve, reject) => {
-  Review.findOne({ where: { id: reviewId } })
-    .then((review) => {
-      const { dislike } = review;
-      review.update({ dislike: dislike + 1 }).then(() => {
-        resolve();
-      });
+      const { hasRated } = review;
+      if (!(hasRated.split(',').includes(req.user).toString())) {
+        const { dislike } = review;
+        const updatedHasRated = `${hasRated}, ${req.user}`;
+        review.update({ dislike: dislike + 1, hasRated: updatedHasRated }).then(() => {
+          resolve();
+        });
+      }
     })
     .catch(() => {
       reject();
@@ -418,7 +410,6 @@ module.exports = {
   findTopReviews,
   updateLikeInReview,
   updateDislikeInReview,
-  updateHasRatedInReview,
   getUserReviews,
   findUserAndUpdateUsername,
   getWebUrls,
