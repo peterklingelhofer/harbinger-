@@ -58,8 +58,14 @@ const MyButton = styled(Button)({
 });
 
 const KeywordBox = styled(Box)({
+  marginTop: '15px',
+  fontSize: '15px',
+  marginLeft: '200px',
   borderRadius: 2,
   color: 'blue',
+  width: 'max-content',
+  fontFamily: 'arial',
+  fontWeight: 'bold',
 });
 
 
@@ -106,17 +112,18 @@ const Review = ({ info }) => (
             's Profile
           </h4>
         </Link>
-        <KeywordBox>
-          <h3>
-            {info.keywords.map((object) => <Keyword key={object.KeywordId} keyword={object} />)}
-          </h3>
-        </KeywordBox>
         <a
           href={info.WebUrl.url}
           style={{ marginLeft: '170px', padding: '0px' }}
         >
           {info.WebUrl.url}
         </a>
+        <KeywordBox>
+          tags
+          <div style={{ marginTop: '3px', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline', fontWeight: 'normal' }}>
+            {info.keywords.map((item) => <Keyword key={item.KeywordId} keyword={item.keyword} />)}
+          </div>
+        </KeywordBox>
         <div style={{ padding: '20px' }}>
           <Rating defaultStars={info.rating} alreadyRated />
           <div style={{ display: 'inline-block', marginLeft: '20px' }}>

@@ -107,11 +107,14 @@ reviewRoute.post('/submit', (req, res) => {
         .then((data) => {
           const keywords = keyword
             .toLowerCase()
-            .split(', ')
+            .split(',')
             .map((chunk) => {
-              return chunk.split(',');
+              return chunk.trim();
             })
-            .flat();
+            .filter((string) => {
+              return string.match(/^[a-zA-Z]+$/);
+            })
+            .slice(0, 10);
           const saveKeywords = keywords.map((keyword) => {
             return saveOrFindKeyWord(keyword, data.dataValues.id);
           });
