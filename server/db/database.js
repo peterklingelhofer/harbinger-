@@ -326,8 +326,8 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
 const findTopReviews = (userId) => new Promise((resolve, reject) => {
-  const where = !userId ? {} : { id: userId };
-  Review.findAll({ where, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}] })
+  const where = !userId ? {} : { userId };
+  Review.findAll({ where , include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}] })
     .then((data) => {
       resolve(data);
     })
