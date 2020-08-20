@@ -101,12 +101,12 @@ app.get(
 );
 
 app.get('/logout', (req, res) => {
-  req.session = null;
+  //req.session = null;
   req.logout();
   // redirect them to login page?
   console.log('hit logout')
   loggedin = false;
-  res.redirect('/google');
+  res.send();
 });
 
 

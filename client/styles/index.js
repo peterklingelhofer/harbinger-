@@ -17,5 +17,27 @@ export const Background = styled(Toolbar)({
   border: 0,
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  color: 'red',
+  color: 'white',
 });
+
+export const logoTitle = {
+  display: 'inline-block',
+  color: 'white',
+  position: 'absolute',
+  marginLeft: '60px',
+};
+
+export const userPictureStyle = {
+  width: '50px',
+  height: '50px',
+  display: 'inline-block',
+  marginLeft: '800px',
+  borderRadius: '50%',
+  verticalAlign: 'middle',
+};
+
+export const userNameStyle = {
+  display: 'inline-block',
+  color: 'white',
+  textAlign: 'right',
+};
