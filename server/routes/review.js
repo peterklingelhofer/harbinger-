@@ -22,10 +22,8 @@ let changer = '';
 reviewRoute.get('/url', (req, res) => {
   saveOrFindWebUrl(changer)
     .then((data) => {
-      console.log(data.dataValues.id, 'this is data ofcourse');
       findTopReviews({ where: { id_web: data.dataValues.id } })
         .then((ddata) => {
-          console.log('I AM DEHDDJDSK', ddata);
           res.send(ddata);
         })
         .catch((err) => console.error(err));

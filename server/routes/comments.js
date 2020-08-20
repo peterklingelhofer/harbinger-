@@ -13,8 +13,8 @@ const reviewComments = Router();
  */
 
 reviewComments.post('/comments', (req, res) => {
-  const { message, idUser, idReview } = req.body;
-  saveReviewComments(message, idUser, idReview)
+  const { message, UserId, ReviewId } = req.body;
+  saveReviewComments(message, UserId, ReviewId)
     .then((savedComment) => {
       res.send(savedComment);
     })

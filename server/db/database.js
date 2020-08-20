@@ -220,10 +220,9 @@ db.sync();
 // helper function to save users review comments to the "Comments" table in the harbinger DB
 const saveReviewComments = (message, idUser, idReview) => Comment.create({
   message,
-  id_user: idUser,
-  id_review: idReview,
+  UserId: idUser,
+  ReviewId: idReview,
 });
-
 
 /**
  * Database helper to find reviews by keyword
