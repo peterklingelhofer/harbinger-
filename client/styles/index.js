@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
+import Box from '@material-ui/core/Box';
 import { styled } from '@material-ui/core';
 
 export const MyButton = styled(Button)({
@@ -18,6 +19,12 @@ export const Background = styled(Toolbar)({
   borderRadius: 3,
   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   color: 'white',
+});
+
+export const ImageBG = styled(Box)({
+  borderRadius: 7,
+  boxShadow: '0 1px 30px 0px gray',
+  color: 'black',
 });
 
 export const logoTitle = {
@@ -40,4 +47,19 @@ export const userNameStyle = {
   display: 'inline-block',
   color: 'white',
   textAlign: 'right',
+};
+
+export const profileImageStyle = {
+  position: 'absolute',
+  marginBottom: '20px',
+  width: '150px',
+  height: '150px',
+};
+
+export const profileBioStyle = {
+  maxWidth: '700px',
+  marginLeft: '300px',
+  marginBottom: '10px',
+  positon: 'absolute',
+  padding: '42px',
 };
