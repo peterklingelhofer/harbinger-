@@ -211,7 +211,7 @@ Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
 Review.hasMany(Keyword, { as: 'keywords' });
 // create join between Comment & Users tables
-Comment.belongsTo(Review, { as: 'Review', constraints: false });
+Review.hasMany(Comment, { as: 'Comment', constraints: false });
 // create join between Comment & Review tables
 Comment.belongsTo(Users, { as: 'User', constraints: false });
 db.sync();
@@ -240,10 +240,7 @@ const findArticleByKeyWord = (keyword) => Keyword.findAll({
         where: {
           id,
         },
-        include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }],
-        order: [
-          ['CreatedAt', 'DESC'],
-        ],
+        include:  [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}],
         limit: 50,
       })
         .then((data) => data)
@@ -329,12 +326,13 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
 const findTopReviews = (userId) => new Promise((resolve, reject) => {
-  const where = !userId ? {} : { id: userId };
-  Review.findAll({ where, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+  const where = !userId ? {} : { userId };
+  Review.findAll({ where , include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}] })
     .then((data) => {
       resolve(data);
     })
     .catch((err) => {
+      console.log(err);
       reject(err);
     });
 });
