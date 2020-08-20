@@ -27,6 +27,14 @@ export const ImageBG = styled(Box)({
   color: 'black',
 });
 
+export const ReviewBG = styled(Box)({
+  borderRadius: 3,
+  height: 200,
+  boxShadow: '0 3px 5px 2px #b81a06',
+  backgroundColor: '#FAEBD7',
+  color: 'black',
+});
+
 export const logoTitle = {
   display: 'inline-block',
   color: 'white',

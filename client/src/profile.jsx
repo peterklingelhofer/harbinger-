@@ -2,33 +2,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { styled } from '@material-ui/core';
-// import Button from '@material-ui/core/Button';
-// import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
 import ReviewList from './ReviewList.jsx';
-// import Review from './Review.jsx';
-import { 
+import {
   MyButton,
   Background,
   ImageBG,
   profileImageStyle,
   profileBioStyle,
- } from '../styles';
+  ReviewBG,
+} from '../styles';
 
 function Profile() {
   let username;
   const [user, setUser] = useState({});
   // const [userReviews, setUserReviews] = useState([]);
   const { register, handleSubmit } = useForm();
-
-  const ReviewBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 5px 2px #b81a06',
-    backgroundColor: '#FAEBD7',
-    color: 'black',
-  });
 
   const onSubmit = (userBio) => {
     axios.post('/profile/bio', { bio: userBio }).then(({ data }) => {
@@ -115,7 +103,7 @@ function Profile() {
       <div>
         <div />
       </div>
-      <Background><h1 style={{ marginLeft: "500px", color: "white" }}>My Reviews</h1></Background>
+      <Background><h1 style={{ marginLeft: '500px' }}>My Reviews</h1></Background>
       <div>
         {!user.id ? null : <ReviewList userId={user.id} />}
       </div>
