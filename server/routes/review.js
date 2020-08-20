@@ -109,7 +109,7 @@ reviewRoute.post('/submit', (req, res) => {
               return chunk.trim();
             })
             .filter((string) => {
-              return string.match(/^[a-zA-Z]+$/);
+              return string.match(/^[a-zA-Z ]+$/);
             })
             .slice(0, 10);
           const saveKeywords = keywords.map((keyword) => {
