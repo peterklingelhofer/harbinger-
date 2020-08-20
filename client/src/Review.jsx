@@ -57,7 +57,6 @@ const MyButton = styled(Button)({
 });
 
 const updateLike = (reviewId, type, user) => {
-  // ID CURRENTLY USER WHO CREATED REVIEW NOT USER ATTEMPTING TO RATE IT
   const { id } = user;
   axios
     .put(`/review/update/type=${type}`, {
@@ -65,13 +64,8 @@ const updateLike = (reviewId, type, user) => {
       userId: id,
     })
     .then(() => {
-      // axios.put(`/review/update/type=hasRated`, {
-      //   id,
-      // });
       // console.log('reviewId:', reviewId, type);
-      console.log('reviewId:', reviewId, type);
-    })
-
+    });
 };
 
 /**
@@ -135,8 +129,6 @@ const Review = ({ info }) => (
     <button
       type="submit"
       onClick={() => {
-        debugger;
-        // info.User.username
         updateLike(info.id, 'like', info.User);
       }}
     >

@@ -147,7 +147,7 @@ const Review = db.define('Review', {
     type: Sequelize.STRING(500),
   },
   hasRated: {
-    type: Sequelize.STRING(2020),
+    type: Sequelize.STRING(9000),
   },
 });
 Review.sync();
@@ -306,7 +306,7 @@ const saveReview = (username, title, text, weburl, keyword, rating, photourl, ha
           WebUrlId: idWeb,
           date: new Date(),
           photourl,
-          hasRated, // FIX
+          hasRated,
         }).then((data) => resolve(data));
       });
     });
@@ -348,7 +348,6 @@ const getReviewComments = () => new Promise((resolve, reject) => {
 });
 
 const updateLikeInReview = (req) => new Promise((resolve, reject) => {
-  debugger;
   const { body } = req;
   const { reviewId, userId } = body;
   Review.findOne({ where: { id: reviewId } })
@@ -412,7 +411,6 @@ module.exports = {
   findTopReviews,
   updateLikeInReview,
   updateDislikeInReview,
-  // updateHasRatedInReview,
   getUserReviews,
   findUserAndUpdateUsername,
   getWebUrls,

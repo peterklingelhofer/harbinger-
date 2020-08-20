@@ -10,9 +10,7 @@ const {
   saveOrFindWebUrl,
   saveOrFindKeyWord,
   findArticleByKeyWord,
-  getUserReviews,
 } = require('../db/database');
-const { rest } = require('lodash');
 
 const uploadImage = require('./upload');
 
