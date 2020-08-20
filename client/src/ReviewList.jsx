@@ -11,7 +11,6 @@ import MakeComment from './MakeComment.jsx';
  */
 const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
-  const [updateHelpfulness, setUpdateHelpfulness] = useState(0);
   // Calls the sorting useEffect, call setSort([]) when you want to sort
   const [sort, setSort] = useState([]);
 
@@ -43,7 +42,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
-          <Review key={item.id} info={item} setUpdateHelpfulness={setUpdateHelpfulness}/>
+          <Review key={item.id} info={item} />
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
