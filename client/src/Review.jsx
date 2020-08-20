@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -68,101 +68,129 @@ const KeywordBox = styled(Box)({
   fontWeight: 'bold',
 });
 
-
-const updateLike = (reviewId, type, user) => {
-  const { id } = user;
-  axios
-    .put(`/review/update/type=${type}`, {
-      reviewId,
-      userId: id,
-    })
-    .then(() => {
-      // console.log('reviewId:', reviewId, type);
-    });
-};
-
 /**
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info }) => (
-  <div>
-    <ImageBG width="200">
-      <div>
-        <img
-          src={info.photourl}
-          style={{
-            position: 'absolute',
-            marginBottom: '20px',
-            boxShadow: '0 3px 10px 2px gray',
-          }}
-          width="150px"
-          height="150px"
-        />
-        <TitleBox>
-          <h1 style={{ marginLeft: '200px', padding: '0px', color: 'white' }}>
-            {info.title}
-          </h1>
-        </TitleBox>
-        <Link to={{ pathname: `/userProfile/name=${info.User.username}` }}>
-          <h4 style={{ marginLeft: '170px', padding: '0px' }}>
-            {info.User.username || 'Jim'}
-            's Profile
-          </h4>
-        </Link>
-        <a
-          href={info.WebUrl.url}
-          style={{ marginLeft: '170px', padding: '0px' }}
-        >
-          {info.WebUrl.url}
-        </a>
-        <KeywordBox>
-          tags
-          <div style={{ marginTop: '3px', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline', fontWeight: 'normal' }}>
-            {info.keywords.map((item) => <Keyword key={item.KeywordId} keyword={item.keyword} />)}
+const Review = ({ info }) => {
+  const [likeState, setLikeState] = useState(info.likes);
+  const [dislikeState, setDislikeState] = useState(info.dislike);
+
+  const updateLike = (reviewId, type, user) => {
+    const { id } = user;
+    axios
+      .put(`/review/update/type=${type}`, {
+        reviewId,
+        userId: id,
+      })
+      .then((response) => {
+        console.log('updateLike then:', response);
+        const { data } = response;
+        console.log(data);
+        // if value was updated:
+        if (data) {
+          // if it was a like
+          if (type === 'like') {
+            const newLikeState = likeState + 1;
+            setLikeState(newLikeState);
+            // if it was a dislike:
+          } else {
+            const newDislikeState = dislikeState + 1;
+            setDislikeState(newDislikeState);
+          }
+        }
+      });
+  };
+
+  useEffect(() => {}, []);
+
+  return (
+    <div>
+      <ImageBG width="200">
+        <div>
+          <img
+            src={info.photourl}
+            style={{
+              position: 'absolute',
+              marginBottom: '20px',
+              boxShadow: '0 3px 10px 2px gray',
+            }}
+            width="150px"
+            height="150px"
+          />
+          <TitleBox>
+            <h1 style={{ marginLeft: '200px', padding: '0px', color: 'white' }}>
+              {info.title}
+            </h1>
+          </TitleBox>
+          <Link to={{ pathname: `/userProfile/name=${info.User.username}` }}>
+            <h4 style={{ marginLeft: '170px', padding: '0px' }}>
+              {info.User.username || 'Jim'}
+              's Profile
+            </h4>
+          </Link>
+          <a
+            href={info.WebUrl.url}
+            style={{ marginLeft: '170px', padding: '0px' }}
+          >
+            {info.WebUrl.url}
+          </a>
+          <KeywordBox>
+            tags
+            <div
+              style={{
+                marginTop: '3px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                textDecoration: 'underline',
+                fontWeight: 'normal',
+              }}
+            >
+              {info.keywords.map((item) => (
+                <Keyword key={item.KeywordId} keyword={item.keyword} />
+              ))}
+            </div>
+          </KeywordBox>
+          <div style={{ padding: '20px' }}>
+            <Rating defaultStars={info.rating} alreadyRated />
+            <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+              <LikeBG>
+                <h4>
+                  Helpful:&nbsp;
+                  {likeState}
+                </h4>
+              </LikeBG>
+              <DikeBG>
+                <h4>
+                  Unhelpful:&nbsp;
+                  {dislikeState}
+                </h4>
+              </DikeBG>
+            </div>
+            <TextBox>{info.text}</TextBox>
           </div>
-        </KeywordBox>
-        <div style={{ padding: '20px' }}>
-          <Rating defaultStars={info.rating} alreadyRated />
-          <div style={{ display: 'inline-block', marginLeft: '20px' }}>
-            <LikeBG>
-              <h4>
-                Helpful:
-                {info.likes}
-              </h4>
-            </LikeBG>
-            <DikeBG>
-              <h4>
-                Unhelpful:
-                {info.dislike}
-              </h4>
-            </DikeBG>
-          </div>
-          <TextBox>
-            {info.text}
-          </TextBox>
+          <img height="10" style={{ marginTop: '20px' }}></img>
         </div>
-        <img height="10" style={{ marginTop: '20px' }}></img>
-      </div>
-    </ImageBG>
-    <button
-      type="submit"
-      onClick={() => {
-        updateLike(info.id, 'like', info.User);
-      }}
-    >
-      <MyButton>Helpful</MyButton>
-    </button>
-    <button
-      type="submit"
-      onClick={() => {
-        updateLike(info.id, 'dislike');
-      }}
-    >
-      <MyButton>Unhelpful</MyButton>
-    </button>
-  </div>
-);
+      </ImageBG>
+      <button
+        type="submit"
+        onClick={() => {
+          updateLike(info.id, 'like', info.User);
+        }}
+      >
+        <MyButton>Helpful</MyButton>
+      </button>
+      <button
+        type="submit"
+        onClick={() => {
+          updateLike(info.id, 'dislike');
+        }}
+      >
+        <MyButton>Unhelpful</MyButton>
+      </button>
+    </div>
+  );
+};
 
 export default Review;
 

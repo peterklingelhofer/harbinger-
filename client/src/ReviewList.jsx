@@ -11,6 +11,8 @@ import MakeComment from './MakeComment.jsx';
  */
 const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
+  // Calls the sorting useEffect, call setSort([]) when you want to sort
+  const [sort, setSort] = useState([]);
 
   useEffect(() => {
     axios({
@@ -21,24 +23,27 @@ const ReviewList = ({ userId, userId4Comments }) => {
       },
     })
       .then(({ data }) => {
-        let sortReviews = data;
-        sortReviews = sortReviews.sort((a, b) => {
-          return ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike));
-        });
-        setReviews(sortReviews.reverse());
-        console.log(sortReviews.reverse());
+        setReviews(data);
+        setSort([]);
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
 
+  useEffect(() => {
+    const sortReviews = [...reviews]
+      .sort((a, b) => ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike)));
+    setReviews(sortReviews.reverse());
+    console.log(sortReviews.reverse());
+  }, [sort]);
+
   return (
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
           <Review key={item.id} info={item} />
-          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id}/>
+          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
 
