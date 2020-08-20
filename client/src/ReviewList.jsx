@@ -77,6 +77,9 @@ const ReviewList = ({ userId, userId4Comments }) => {
           <Review key={item.id} info={item} />
           <br />
           <DisplayComment />
+<<<<<<< HEAD
+>>>>>>> c178a7681bcd5cea74f3840de32e7aeac4bde677
+=======
 >>>>>>> c178a7681bcd5cea74f3840de32e7aeac4bde677
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
