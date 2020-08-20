@@ -13,6 +13,14 @@ export const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+export const WebBG = styled(Box)({
+  borderRadius: 3,
+  height: 100,
+  boxShadow: '0 3px 5px 2px #b81a06',
+  backgroundColor: '#FAEBD7',
+  color: 'black',
+});
+
 export const Background = styled(Toolbar)({
   background: 'linear-gradient(45deg, #FE6242 30%, #FF2445 90%)',
   border: 0,
