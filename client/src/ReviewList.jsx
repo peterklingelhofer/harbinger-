@@ -40,13 +40,11 @@ const ReviewList = ({ userId, userId4Comments }) => {
   }, [sort]);
 
   const searchByTag = (tag) => {
-    console.log('e.target.id: ', tag);
     axios({
       method: 'get',
       url: `/review/retrieve/${tag}`,
     })
       .then(({ data }) => {
-        console.log("DATABASE KEYWORD SEARCH RETURN: ", data);
         setReviews(data);
         setSort([]);
       })
