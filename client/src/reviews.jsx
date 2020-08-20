@@ -124,7 +124,7 @@ function Reviews(props) {
     if (!file) {
       config = {
         method: 'post',
-        url: `https://screenshotapi.net/api/v1/screenshot?url=medium.com&token=${process.env.SCREENSHOT_API}`,
+        url: `https://screenshotapi.net/api/v1/screenshot?url=${siteURL}&token=${process.env.SCREENSHOT_API}`,
       };
     } else {
       formData.append('file', file.file);
