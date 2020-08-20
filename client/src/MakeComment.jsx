@@ -9,27 +9,40 @@ import { useForm } from 'react-hook-form';
  * to save user review comments in the Comments table of the db.
  * Review comments are displayed inside of the user website review they are linked with
  */
-const MakeComment = () => {
-  const [reviews, setReviews] = useState([]);
-
-  useEffect(() => {
-    axios({
-      method: 'post',
-      url: '/review/comments',
-    })
+const MakeComment = ({ userId, userId4Comments, ReviewId }) => {
+  const [value, setValue] = useState('');
+  
+  const saveComment = (event) => {
+    console.log(userId4Comments);
+    console.log('************saveComment***************');
+    event.preventDefault();
+    // { message: value, UserId: , ReviewId: }
+    axios.post('/review/comments', { message: value, UserId: userId4Comments, ReviewId })
       .then(({ data }) => {
         console.log(data);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  };
+
+  const handleChange = (event) => {
+    event.persist();
+    setValue(event.target.value);
+  };
 
   return (
     <div>
       <h3>Comment On Review</h3>
-      <form className="review-comments" onSubmit={useEffect}>
-        <textarea className="user-review-comments" rows="10" placeholder="Your Thoughts Here!" />
+      <form className="review-comments" onSubmit={saveComment}>
+        <textarea
+          id="user-comment"
+          className="user-review-comments"
+          rows="10"
+          placeholder="Your Thoughts Here!"
+          value={value}
+          onChange={handleChange}
+        />
         <br />
         <button className="comments-button" type="submit">Make Comment</button>
       </form>

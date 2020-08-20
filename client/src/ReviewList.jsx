@@ -9,7 +9,7 @@ import MakeComment from './MakeComment.jsx';
  *  maps the indiviual review componenets to the page. These are displayed on the
  * homepage.
  */
-const ReviewList = ({ userId }) => {
+const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ReviewList = ({ userId }) => {
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
           <Review key={item.id} info={item} />
-          <MakeComment />
+          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id}/>
         </div>
       ))}
 
