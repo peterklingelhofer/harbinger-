@@ -66,25 +66,13 @@ const ReviewList = ({ userId, userId4Comments }) => {
   return (
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
-<<<<<<< HEAD
         <div key={item.id}>
-          <Review
-            info={item}
-            passTagClick={onTagClick}
-          />
-=======
-        <div>
-          <Review key={item.id} info={item} />
+          <Review info={item} passTagClick={onTagClick} />
           <br />
           <DisplayComment />
-<<<<<<< HEAD
->>>>>>> c178a7681bcd5cea74f3840de32e7aeac4bde677
-=======
->>>>>>> c178a7681bcd5cea74f3840de32e7aeac4bde677
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
-
     </div>
   );
 };
