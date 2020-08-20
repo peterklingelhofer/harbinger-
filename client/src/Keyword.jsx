@@ -8,7 +8,11 @@ const handleClick = (tag) => {
 };
 
   return (
-    <div id={keyword} onClick={(e) => {handleClick(e.target.id)}} onKeyDown={(e) => {e.keyCode === 13 || 32 ? handleTagClick(e.target.id) : '' }}>
+    <div id={keyword}
+      tabIndex="0"
+      onClick={(e) => {handleClick(e.target.id)}}
+      onKeyDown={(e) => { if (e.keyCode === 13 || e.keyCode === 32) {handleClick(e.target.id)} }}
+      style={{ width: 'max-content'}}>
       {keyword}
     </div>
   )
