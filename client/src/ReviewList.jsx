@@ -15,6 +15,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
   // Calls the sorting useEffect, call setSort([]) when you want to sort
   const [sort, setSort] = useState([]);
 
+  // Initially gets all the reviews
   useEffect(() => {
     axios({
       method: 'get',
@@ -32,6 +33,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
       });
   }, []);
 
+  // When sort is changed it sorts the current reviews
   useEffect(() => {
     const sortReviews = [...reviews]
       .sort((a, b) => ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike)));
@@ -39,6 +41,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
     console.log(sortReviews.reverse());
   }, [sort]);
 
+  // Gets the reviews by the given tag
   const searchByTag = (tag) => {
     console.log('e.target.id: ', tag);
     axios({
@@ -55,6 +58,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
       });
   };
 
+  // Calls the search by tag
   const onTagClick = (tag) => {
     searchByTag(tag);
   };
@@ -62,8 +66,12 @@ const ReviewList = ({ userId, userId4Comments }) => {
   return (
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
-        <div>
-          <Review key={item.id} info={item} setUpdateHelpfulness={setUpdateHelpfulness} passTagClick={onTagClick}/>
+        <div key={item.id}>
+          <Review
+            info={item}
+            setUpdateHelpfulness={setUpdateHelpfulness}
+            passTagClick={onTagClick}
+          />
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
