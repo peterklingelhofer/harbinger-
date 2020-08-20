@@ -21,7 +21,12 @@ const ReviewList = ({ userId, userId4Comments }) => {
       },
     })
       .then(({ data }) => {
-        setReviews(data);
+        let sortReviews = data;
+        sortReviews = sortReviews.sort((a, b) => {
+          return ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike));
+        });
+        setReviews(sortReviews.reverse());
+        console.log(sortReviews.reverse());
       })
       .catch((err) => {
         console.error(err);
