@@ -9,7 +9,7 @@ import MakeComment from './MakeComment.jsx';
  *  maps the indiviual review componenets to the page. These are displayed on the
  * homepage.
  */
-const ReviewList = ({ userId }) => {
+const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,12 @@ const ReviewList = ({ userId }) => {
       },
     })
       .then(({ data }) => {
-        setReviews(data);
+        let sortReviews = data;
+        sortReviews = sortReviews.sort((a, b) => {
+          return ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike));
+        });
+        setReviews(sortReviews.reverse());
+        console.log(sortReviews.reverse());
       })
       .catch((err) => {
         console.error(err);
@@ -33,7 +38,7 @@ const ReviewList = ({ userId }) => {
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
           <Review key={item.id} info={item} />
-          <MakeComment />
+          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id}/>
         </div>
       ))}
 

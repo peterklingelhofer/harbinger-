@@ -7,14 +7,11 @@ const {
   getUser,
   findTopReviews,
   updateLikeInReview,
-  updateHasRatedInReview,
   updateDislikeInReview,
   saveOrFindWebUrl,
   saveOrFindKeyWord,
   findArticleByKeyWord,
-  getUserReviews,
 } = require('../db/database');
-const { rest } = require('lodash');
 
 const uploadImage = require('./upload');
 
@@ -23,10 +20,8 @@ let changer = '';
 reviewRoute.get('/url', (req, res) => {
   saveOrFindWebUrl(changer)
     .then((data) => {
-      console.log(data.dataValues.id, 'this is data ofcourse');
       findTopReviews({ where: { id_web: data.dataValues.id } })
         .then((ddata) => {
-          console.log('I AM DEHDDJDSK', ddata);
           res.send(ddata);
         })
         .catch((err) => console.error(err));
@@ -104,16 +99,19 @@ reviewRoute.post('/submit', (req, res) => {
         keyword,
         rating,
         photourl,
-        id
+        req.user,
       )
         .then((data) => {
           const keywords = keyword
             .toLowerCase()
-            .split(', ')
+            .split(',')
             .map((chunk) => {
-              return chunk.split(',');
+              return chunk.trim();
             })
-            .flat();
+            .filter((string) => {
+              return string.match(/^[a-zA-Z]+$/);
+            })
+            .slice(0, 10);
           const saveKeywords = keywords.map((keyword) => {
             return saveOrFindKeyWord(keyword, data.dataValues.id);
           });
@@ -131,7 +129,7 @@ reviewRoute.post('/submit', (req, res) => {
 });
 reviewRoute.put('/update/:type', (req, res) => {
   if (req.params.type === 'type=like') {
-    updateLikeInReview(req.body.reviewId)
+    updateLikeInReview(req)
       .then(() => {
         console.log('review updated!');
         res.status(204);
@@ -140,18 +138,8 @@ reviewRoute.put('/update/:type', (req, res) => {
       .catch((err) => {
         console.error(err);
       });
-  } else if (req.params.type === 'type=hasRated') {
-    updateHasRatedInReview(req.body.reviewId)
-      .then(() => {
-        console.log('hasRated updated');
-        res.status(204);
-        res.end();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   } else {
-    updateDislikeInReview(req.body.reviewId).then(() => {
+    updateDislikeInReview(req).then(() => {
       console.log('review updated!');
       res.status(204);
       res.end();

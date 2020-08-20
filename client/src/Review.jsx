@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core';
 import Rating from './Rating.jsx';
+import Keyword from './Keyword.jsx';
 
 const ImageBG = styled(Box)({
   borderRadius: 7,
@@ -56,18 +57,28 @@ const MyButton = styled(Button)({
   padding: '0 20px',
 });
 
+const KeywordBox = styled(Box)({
+  marginTop: '15px',
+  fontSize: '15px',
+  marginLeft: '200px',
+  borderRadius: 2,
+  color: 'blue',
+  width: 'max-content',
+  fontFamily: 'arial',
+  fontWeight: 'bold',
+});
+
+
 const updateLike = (reviewId, type, user) => {
   const { id } = user;
   axios
     .put(`/review/update/type=${type}`, {
       reviewId,
+      userId: id,
     })
     .then(() => {
-      console.log('userId:', reviewId, type);
-    })
-    .put(`/review/update/type=hasRated`, {
-      id,
-    })
+      // console.log('reviewId:', reviewId, type);
+    });
 };
 
 /**
@@ -105,6 +116,12 @@ const Review = ({ info }) => (
         >
           {info.WebUrl.url}
         </a>
+        <KeywordBox>
+          tags
+          <div style={{ marginTop: '3px', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline', fontWeight: 'normal' }}>
+            {info.keywords.map((item) => <Keyword key={item.KeywordId} keyword={item.keyword} />)}
+          </div>
+        </KeywordBox>
         <div style={{ padding: '20px' }}>
           <Rating defaultStars={info.rating} alreadyRated />
           <div style={{ display: 'inline-block', marginLeft: '20px' }}>
