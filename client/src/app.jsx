@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HomePage from './homepage.jsx';
-import Login from './login.jsx';
 import Profile from './profile.jsx';
 import Reviews from './reviews.jsx';
 import Search from './search.jsx';
 import UserProfile from './userProfile.jsx';
 
-
+/**
+ * App component that takes care of all the routing
+ */
 function App() {
   return (
     <Router>
@@ -18,9 +19,6 @@ function App() {
           </Route>
           <Route exact path='/searchresults'>
             <Search />
-          </Route>
-          <Route path='/login'>
-            <Login />
           </Route>
           <Route path="/me">
             <Profile />
@@ -38,6 +36,3 @@ function App() {
 }
 
 export default App;
-
-// |App will be housing every component within it.
-//  \The router-dom methods will be used to activate different components based on route-based conditionals.
