@@ -35,6 +35,32 @@ export const ReviewBG = styled(Box)({
   color: 'black',
 });
 
+export const LikeBG = styled(Box)({
+  borderRadius: 3,
+  height: 200,
+  boxShadow: '0 3px 4px 2px gray',
+  backgroundColor: '#9ACD32',
+  maxHeight: '20px',
+  maxWidth: '400px',
+  color: 'white',
+});
+
+export const DisLikeBG = styled(Box)({
+  borderRadius: 3,
+  height: 200,
+  boxShadow: '0 3px 4px 2px gray',
+  backgroundColor: '#F08080',
+  maxHeight: '20px',
+  maxWidth: '400px',
+  color: 'white',
+});
+
+export const TitleBox = styled(Box)({
+  background: 'linear-gradient(45deg, #FE6534 30%, #FCD98D 90%)',
+  borderRadius: 7,
+  color: 'black',
+});
+
 export const logoTitle = {
   display: 'inline-block',
   color: 'white',

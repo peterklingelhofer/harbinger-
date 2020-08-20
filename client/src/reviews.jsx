@@ -2,12 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
-import { styled, Backdrop } from '@material-ui/core';
+import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
 import Rating from './Rating.jsx';
 import PhotoUpload from './PhotoUpload.jsx';
+import {
+  MyButton,
+  Background,
+  LikeBG,
+  DisLikeBG,
+  ImageBG,
+  TitleBox,
+} from '../styles';
 
 // WHERE YOU WRITE REVIEWS
 
@@ -17,59 +25,7 @@ function Reviews(props) {
   const [starsSelected, setStarsSelected] = useState(0);
   const [redirect, setRedirect] = useState(false);
   const [file, setFile] = useState(null);
-  const MyButton = styled(Button)({
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 20,
-    padding: '0 20px',
-  });
 
-  const Background = styled(Toolbar)({
-    background: 'linear-gradient(45deg, #FE6242 30%, #FF2445 90%)',
-    border: 0,
-    borderRadius: 3,
-    height: '10px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'red',
-  });
-
-  const ReviewBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 5px 2px #b81a06',
-    backgroundColor: '#FAEBD7',
-    color: 'black',
-  });
-
-  const LikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#9ACD32',
-    color: 'black',
-  });
-
-  const DikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#F08080',
-  });
-
-  const ImageBG = styled(Box)({
-    borderRadius: 7,
-    boxShadow: '0 1px 30px 0px gray',
-    color: 'black',
-  });
-
-  const TitleBox = styled(Box)({
-    background: 'linear-gradient(45deg, #FE6534 30%, #FCD98D 90%)',
-    borderRadius: 7,
-    color: 'black',
-  });
   let siteURL = window.location.href.split('site=');
   siteURL = siteURL[1];
   useEffect(() => {
@@ -184,18 +140,12 @@ function Reviews(props) {
   return (
     <div>
       {!redirect ? null : <Redirect to="/me" />}
-      <Background>
+      <Background style={{ height: '10px' }}>
         <h1 style={{ color: 'white', display: 'inline-block' }}>
           Leave a Review For {siteURL.split('//')[1].split('.com')[0]}
         </h1>
         <Link to="/">
-          <h1
-            style={{
-              color: 'white',
-              display: 'inline-block',
-              marginLeft: '500px',
-            }}
-          >
+          <h1 style={{ display: 'inline-block', marginLeft: '500px' }}>
             Back to Homepage
           </h1>
         </Link>
@@ -219,12 +169,7 @@ function Reviews(props) {
                 />
                 <TitleBox>
                   <h1
-                    style={{
-                      marginLeft: '200px',
-                      padding: '0px',
-                      color: 'white',
-                    }}
-                  >
+                    style={{ marginLeft: '200px', padding: '0px' }}>
                     {review.title}
                   </h1>
                 </TitleBox>
@@ -241,31 +186,19 @@ function Reviews(props) {
                 </a>
                 <div style={{ padding: '20px' }}>
                   <div style={{ display: 'inline-block', marginLeft: '20px' }}>
-                    <LikeBG
-                      style={{
-                        maxHeight: '20px',
-                        maxWidth: '400px',
-                        color: 'white',
-                      }}
-                    >
-                      <h4 style={{}}>
+                    <LikeBG>
+                      <h4>
                         Likes:
                         {review.likes}
                       </h4>
                     </LikeBG>
-                    <DikeBG
-                      style={{
-                        maxHeight: '20px',
-                        maxWidth: '400px',
-                        color: 'white',
-                      }}
-                    >
+                    <DisLikeBG>
                       <h4>
                         {' '}
                         Dislikes:
                         {review.dislike}
                       </h4>
-                    </DikeBG>
+                    </DisLikeBG>
                   </div>
                   <div
                     style={{
