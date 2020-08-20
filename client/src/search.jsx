@@ -5,6 +5,13 @@ import axios from 'axios';
 import { styled } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import {
+  MyButton,
+  WebBG,
+  LikeBG,
+  DisLikeBG,
+  TitleBox,
+} from "../styles";
 
 function Search() {
   const searchBing = (query) => {
@@ -41,52 +48,6 @@ function Search() {
         console.log(error);
       });
   };
-
-  const MyButton = styled(Button)({
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
-    height: 20,
-    padding: '0 20px',
-  });
-
-  const WebBG = styled(Box)({
-    borderRadius: 3,
-    height: 100,
-    boxShadow: '0 3px 5px 2px #b81a06',
-    backgroundColor: '#FAEBD7',
-    color: 'black',
-  });
-
-  const LikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#9ACD32',
-    color: 'black',
-  });
-
-  const DikeBG = styled(Box)({
-    borderRadius: 3,
-    height: 200,
-    boxShadow: '0 3px 4px 2px gray',
-    backgroundColor: '#F08080',
-  });
-
-  const ImageBG = styled(Box)({
-    borderRadius: 7,
-    boxShadow: '0 1px 30px 0px gray',
-    backgroundColor: '#FAEBD7',
-    color: 'black',
-  });
-
-  const TitleBox = styled(Box)({
-    background: 'linear-gradient(45deg, #FE6534 30%, #FCD98D 90%)',
-    borderRadius: 7,
-    color: 'black',
-  });
   const [webSites, webSitesUpdate] = useState([]);
   const [reviewedSites, reviewedSitesUpdate] = useState([]);
 
@@ -124,9 +85,9 @@ function Search() {
                     <LikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
                       <h4 style={{}}>Likes:{review.likes}</h4>
                     </LikeBG>
-                    <DikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
+                    <DisLikeBG style={{ maxHeight: "20px", maxWidth: "400px", color: "white" }}>
                       <h4>{' '}Dislikes:{review.dislike}</h4>
-                    </DikeBG>
+                    </DisLikeBG>
                   </div>
                 </div>
                 <img height="10" style={{ marginTop: "20px" }}></img>

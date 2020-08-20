@@ -211,7 +211,7 @@ Review.belongsTo(WebUrls, { as: 'WebUrl', constraints: false });
 Keyword.belongsTo(Review, { as: 'Keyword', constraints: false });
 Review.hasMany(Keyword, { as: 'keywords' });
 // create join between Comment & Users tables
-Comment.belongsTo(Review, { as: 'Review', constraints: false });
+Review.hasMany(Comment, { as: 'Comment', constraints: false });
 // create join between Comment & Review tables
 Comment.belongsTo(Users, { as: 'User', constraints: false });
 db.sync();
@@ -240,10 +240,7 @@ const findArticleByKeyWord = (keyword) => Keyword.findAll({
         where: {
           id,
         },
-        include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }],
-        order: [
-          ['CreatedAt', 'DESC'],
-        ],
+        include:  [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}],
         limit: 50,
       })
         .then((data) => data)
@@ -329,12 +326,13 @@ const findUserAndUpdateImage = (serial, image) => Users.findOne({ where: { seria
  * Database helper to find the reviews joins with User, WebUrl, and Keywords
  */
 const findTopReviews = (userId) => new Promise((resolve, reject) => {
-  const where = !userId ? {} : { id: userId };
-  Review.findAll({ where, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
+  const where = !userId ? {} : { userId };
+  Review.findAll({ where , include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, {model: Comment, as: 'Comment', include: [{model: Users, as: 'User'}]}] })
     .then((data) => {
       resolve(data);
     })
     .catch((err) => {
+      console.log(err);
       reject(err);
     });
 });
@@ -352,7 +350,7 @@ const getReviewComments = () => new Promise((resolve, reject) => {
 
 const updateLikeInReview = (req) => new Promise((resolve, reject) => {
   const { body } = req;
-  const { reviewId, userId } = body;
+  const { reviewId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
       const { likes, hasRated } = review;
@@ -360,8 +358,10 @@ const updateLikeInReview = (req) => new Promise((resolve, reject) => {
       if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ likes: likes + 1, hasRated: updatedHasRated }).then(() => {
-          resolve();
+          resolve(true);
         });
+      } else {
+        resolve(false);
       }
     })
     .catch(() => {
@@ -371,16 +371,18 @@ const updateLikeInReview = (req) => new Promise((resolve, reject) => {
 
 const updateDislikeInReview = (req) => new Promise((resolve, reject) => {
   const { body } = req;
-  const { reviewId, userId } = body;
+  const { reviewId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
-      const { hasRated } = review;
-      if (!(hasRated.split(',').includes(req.user).toString())) {
-        const { dislike } = review;
+      const { hasRated, dislike } = review;
+      const arrayHasRated = hasRated.split(',');
+      if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ dislike: dislike + 1, hasRated: updatedHasRated }).then(() => {
-          resolve();
+          resolve(true);
         });
+      } else {
+        resolve(false);
       }
     })
     .catch(() => {
