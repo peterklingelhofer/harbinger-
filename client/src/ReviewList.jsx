@@ -38,11 +38,31 @@ const ReviewList = ({ userId, userId4Comments }) => {
     console.log(sortReviews.reverse());
   }, [sort]);
 
+  const searchByTag = (tag) => {
+    console.log('e.target.id: ', tag);
+    axios({
+      method: 'get',
+      url: `/review/retrieve/${tag}`,
+    })
+      .then(({ data }) => {
+        console.log("DATABASE KEYWORD SEARCH RETURN: ", data);
+        setReviews(data);
+        setSort([]);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const onTagClick = (tag) => {
+    searchByTag(tag);
+  };
+
   return (
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
-          <Review key={item.id} info={item} />
+          <Review key={item.id} info={item} passTagClick={onTagClick} />
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}

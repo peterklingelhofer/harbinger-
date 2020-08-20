@@ -72,7 +72,10 @@ const KeywordBox = styled(Box)({
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info }) => {
+const Review = ({ info, passTagClick }) => {
+  const continueTagClick = (tag) => {
+    passTagClick(tag);
+  };
   const [likeState, setLikeState] = useState(info.likes);
   const [dislikeState, setDislikeState] = useState(info.dislike);
 
@@ -102,7 +105,6 @@ const Review = ({ info }) => {
       });
   };
 
-  useEffect(() => {}, []);
 
   return (
     <div>
@@ -147,7 +149,7 @@ const Review = ({ info }) => {
               }}
             >
               {info.keywords.map((item) => (
-                <Keyword key={item.KeywordId} keyword={item.keyword} />
+                <Keyword key={item.KeywordId} keyword={item.keyword} handleTagClick={continueTagClick} />
               ))}
             </div>
           </KeywordBox>
