@@ -91,7 +91,7 @@ function HomePage() {
       <Background style={{ color: "white", marginLeft: "600px" }}>
         <h2>Top Best Reviews</h2>
       </Background>
-      <ReviewList />
+      <ReviewList userId4Comments={user.id} />
     </div>
   );
 }
