@@ -11,6 +11,7 @@ import MakeComment from './MakeComment.jsx';
  */
 const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
+  const [updateHelpfulness, setUpdateHelpfulness] = useState(0);
 
   useEffect(() => {
     axios({
@@ -37,8 +38,8 @@ const ReviewList = ({ userId, userId4Comments }) => {
     <div>
       {!reviews.length ? 'loading' : reviews.map((item) => (
         <div>
-          <Review key={item.id} info={item} />
-          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id}/>
+          <Review key={item.id} info={item} setUpdateHelpfulness={setUpdateHelpfulness}/>
+          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
 
