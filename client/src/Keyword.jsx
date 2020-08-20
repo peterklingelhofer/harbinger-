@@ -19,7 +19,7 @@ export default function Keyword ({ keyword }) {
   // }, []);
 
   const handleClick = (e) => {
-    console.log('e: ', e.target.id);
+    console.log('e.target.id: ', e.target.id);
     const input = e.target.id;
     axios({
       method: 'get',
