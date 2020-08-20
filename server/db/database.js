@@ -376,9 +376,9 @@ const updateDislikeInReview = (req) => new Promise((resolve, reject) => {
   const { reviewId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
-      const { hasRated } = review;
-      if (!(hasRated.split(',').includes(req.user).toString())) {
-        const { dislike } = review;
+      const { hasRated, dislike } = review;
+      const arrayHasRated = hasRated.split(',');
+      if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ dislike: dislike + 1, hasRated: updatedHasRated }).then(() => {
           resolve(true);

@@ -187,7 +187,7 @@ const Review = ({ info, passTagClick }) => {
       <button
         type="submit"
         onClick={() => {
-          updateLike(info.id, 'dislike');
+          updateLike(info.id, 'dislike', info.User);
         }}
       >
         <MyButton>Unhelpful</MyButton>
