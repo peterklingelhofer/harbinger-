@@ -6,7 +6,6 @@ const {
   getUser,
   findTopReviews,
   updateLikeInReview,
-  updateHasRatedInReview,
   updateDislikeInReview,
   saveOrFindWebUrl,
   saveOrFindKeyWord,
@@ -102,7 +101,7 @@ reviewRoute.post('/submit', (req, res) => {
         keyword,
         rating,
         photourl,
-        id
+        req.user,
       )
         .then((data) => {
           const keywords = keyword
@@ -129,7 +128,7 @@ reviewRoute.post('/submit', (req, res) => {
 });
 reviewRoute.put('/update/:type', (req, res) => {
   if (req.params.type === 'type=like') {
-    updateLikeInReview(req.body.reviewId)
+    updateLikeInReview(req)
       .then(() => {
         console.log('review updated!');
         res.status(204);
@@ -138,18 +137,8 @@ reviewRoute.put('/update/:type', (req, res) => {
       .catch((err) => {
         console.error(err);
       });
-  } else if (req.params.type === 'type=hasRated') {
-    updateHasRatedInReview(req.body.reviewId)
-      .then(() => {
-        console.log('hasRated updated');
-        res.status(204);
-        res.end();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   } else {
-    updateDislikeInReview(req.body.reviewId).then(() => {
+    updateDislikeInReview(req).then(() => {
       console.log('review updated!');
       res.status(204);
       res.end();
