@@ -3,30 +3,15 @@ import axios from 'axios';
 
 export default function Keyword ({ keyword }) {
 
-  // const [reviews, setReviews] = useState(reviews);
-  // useEffect((e) => {
-  //   console.log('e: ', e);
-  //   axios({
-  //     method: 'get',
-  //     url: `/review/retrieve/${e.target.id}`,
-  //   })
-  //     .then(({ data }) => {
-  //       setReviews(data);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }, []);
-
-  const handleClick = (e) => {
-    console.log('e.target.id: ', e.target.id);
-    const input = e.target.id;
+  const handleTagClick = (keyword) => {
+    console.log('e.target.id: ', keyword);
     axios({
       method: 'get',
-      url: `/review/retrieve/${input}`,
+      url: `/review/retrieve/${keyword}`,
     })
       .then(({ data }) => {
         console.log("DATABASE KEYWORD SEARCH RETURN: ", data);
+        setReviews(data);
       })
       .catch((err) => {
         console.error(err);
@@ -34,8 +19,7 @@ export default function Keyword ({ keyword }) {
   };
 
   return (
-    // <div id={keyword} onClick={(e) => {useEffect(e)}}>
-    <div id={keyword} onClick={(e) => {handleClick(e)}}>
+    <div id={keyword} onClick={(e) => {handleTagClick(e.target.id)}}>
       {keyword}
     </div>
   )
