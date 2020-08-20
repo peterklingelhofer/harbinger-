@@ -240,7 +240,11 @@ const findArticleByKeyWord = (keyword) => Keyword.findAll({
         where: {
           id,
         },
-        include: { model: Keyword, as: 'keywords' },
+        include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }],
+        order: [
+          ['CreatedAt', 'DESC'],
+        ],
+        limit: 50,
       })
         .then((data) => data)
         .catch((err) => console.log(err, 'SOMETHING WENT WRONG'));
