@@ -89,7 +89,6 @@ const Review = ({ info, passTagClick }) => {
       .then((response) => {
         console.log('updateLike then:', response);
         const { data } = response;
-        console.log(data);
         // if value was updated:
         if (data) {
           // if it was a like
@@ -158,14 +157,17 @@ const Review = ({ info, passTagClick }) => {
             <div style={{ display: 'inline-block', marginLeft: '20px' }}>
               <LikeBG>
                 <h4>
-                  Helpful:&nbsp;
+                  &nbsp;Helpful:&nbsp;
                   {likeState}
+                  &nbsp;
                 </h4>
               </LikeBG>
               <DikeBG>
                 <h4>
+                  &nbsp;
                   Unhelpful:&nbsp;
                   {dislikeState}
+                  &nbsp;
                 </h4>
               </DikeBG>
             </div>
@@ -185,7 +187,7 @@ const Review = ({ info, passTagClick }) => {
       <button
         type="submit"
         onClick={() => {
-          updateLike(info.id, 'dislike');
+          updateLike(info.id, 'dislike', info.User);
         }}
       >
         <MyButton>Unhelpful</MyButton>

@@ -352,7 +352,7 @@ const getReviewComments = () => new Promise((resolve, reject) => {
 
 const updateLikeInReview = (req) => new Promise((resolve, reject) => {
   const { body } = req;
-  const { reviewId, userId } = body;
+  const { reviewId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
       const { likes, hasRated } = review;
@@ -360,10 +360,10 @@ const updateLikeInReview = (req) => new Promise((resolve, reject) => {
       if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ likes: likes + 1, hasRated: updatedHasRated }).then(() => {
-          resolve('true');
+          resolve(true);
         });
       } else {
-        resolve('false');
+        resolve(false);
       }
     })
     .catch(() => {
@@ -373,18 +373,18 @@ const updateLikeInReview = (req) => new Promise((resolve, reject) => {
 
 const updateDislikeInReview = (req) => new Promise((resolve, reject) => {
   const { body } = req;
-  const { reviewId, userId } = body;
+  const { reviewId } = body;
   Review.findOne({ where: { id: reviewId } })
     .then((review) => {
-      const { hasRated } = review;
-      if (!(hasRated.split(',').includes(req.user).toString())) {
-        const { dislike } = review;
+      const { hasRated, dislike } = review;
+      const arrayHasRated = hasRated.split(',');
+      if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ dislike: dislike + 1, hasRated: updatedHasRated }).then(() => {
-          resolve('true');
+          resolve(true);
         });
       } else {
-        resolve('false');
+        resolve(false);
       }
     })
     .catch(() => {
