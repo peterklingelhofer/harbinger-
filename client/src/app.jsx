@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import HomePage from './homepage.jsx';
 import Login from './login.jsx';
 import Profile from './profile.jsx';
 import Reviews from './reviews.jsx';
 import Search from './search.jsx';
 import UserProfile from './userProfile.jsx';
-import { styled, Backdrop } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
+
 
 function App() {
   return (
