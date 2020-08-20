@@ -18,6 +18,7 @@
     "ms-rest-azure": "^3.0.0",
     "multer": "^1.4.2",
     "mysql2": "^2.1.0",
+    "parcel-bundler": "^1.12.4",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "prop-types": "^15.7.2",
@@ -51,8 +52,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./server/index.js",
     "start:dev": "nodemon ./server/index.js",
-    "build:client": "webpack --config webpack.config.js --mode production",
-    "build:client-dev": "webpack --config webpack.config.js --mode development --watch"
+    "build:client": "parcel build client/index.html -d client/dist",
+    "build:client-dev": "parcel watch client/index.html -d client/dist"
   },
   "repository": {
     "type": "git",
