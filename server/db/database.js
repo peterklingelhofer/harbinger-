@@ -360,8 +360,10 @@ const updateLikeInReview = (req) => new Promise((resolve, reject) => {
       if (!(arrayHasRated.includes((req.user).toString()))) {
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ likes: likes + 1, hasRated: updatedHasRated }).then(() => {
-          resolve();
+          resolve('true');
         });
+      } else {
+        resolve('false');
       }
     })
     .catch(() => {
@@ -379,8 +381,10 @@ const updateDislikeInReview = (req) => new Promise((resolve, reject) => {
         const { dislike } = review;
         const updatedHasRated = `${hasRated}, ${req.user}`;
         review.update({ dislike: dislike + 1, hasRated: updatedHasRated }).then(() => {
-          resolve();
+          resolve('true');
         });
+      } else {
+        resolve('false');
       }
     })
     .catch(() => {

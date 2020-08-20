@@ -67,7 +67,7 @@ reviewRoute.post('/upload', (req, res) => {
     const fileToUpload = req.file;
     uploadImage(fileToUpload)
       .then((url) => {
-        console.log('I AM THE URL', url)
+        console.log('I AM THE URL', url);
         res.status(201).send({ url });
       })
       .catch((err) => {
@@ -82,15 +82,7 @@ reviewRoute.post('/upload', (req, res) => {
 reviewRoute.post('/submit', (req, res) => {
   if (req.user) {
     getUser(req.user).then((data) => {
-      const {
-        text,
-        title,
-        weburl,
-        keyword,
-        rating,
-        photourl,
-        id
-      } = req.body;
+      const { text, title, weburl, keyword, rating, photourl, id } = req.body;
       return saveReview(
         data.dataValues.username,
         title,
@@ -99,7 +91,7 @@ reviewRoute.post('/submit', (req, res) => {
         keyword,
         rating,
         photourl,
-        req.user,
+        req.user
       )
         .then((data) => {
           const keywords = keyword
@@ -130,20 +122,22 @@ reviewRoute.post('/submit', (req, res) => {
 reviewRoute.put('/update/:type', (req, res) => {
   if (req.params.type === 'type=like') {
     updateLikeInReview(req)
-      .then(() => {
-        console.log('review updated!');
-        res.status(204);
-        res.end();
+      .then((response) => {
+        console.log('like updated!', response);
+        res.send(response);
       })
       .catch((err) => {
         console.error(err);
       });
   } else {
-    updateDislikeInReview(req).then(() => {
-      console.log('review updated!');
-      res.status(204);
-      res.end();
-    });
+    updateDislikeInReview(req)
+      .then((response) => {
+        console.log('dislike updated!', response);
+        res.send(response);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 });
 

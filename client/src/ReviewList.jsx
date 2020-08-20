@@ -11,7 +11,6 @@ import MakeComment from './MakeComment.jsx';
  */
 const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
-  const [updateHelpfulness, setUpdateHelpfulness] = useState(0);
   // Calls the sorting useEffect, call setSort([]) when you want to sort
   const [sort, setSort] = useState([]);
 
@@ -69,7 +68,6 @@ const ReviewList = ({ userId, userId4Comments }) => {
         <div key={item.id}>
           <Review
             info={item}
-            setUpdateHelpfulness={setUpdateHelpfulness}
             passTagClick={onTagClick}
           />
           <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
