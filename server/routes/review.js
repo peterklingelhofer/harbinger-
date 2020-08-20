@@ -1,5 +1,6 @@
 /* eslint-disable arrow-body-style */
 const { Router } = require('express');
+
 require('../db/database');
 const {
   saveReview,
@@ -71,7 +72,8 @@ reviewRoute.post('/upload', (req, res) => {
     const fileToUpload = req.file;
     uploadImage(fileToUpload)
       .then((url) => {
-        res.status(201).send(url);
+        console.log('I AM THE URL', url)
+        res.status(201).send({ url });
       })
       .catch((err) => {
         res.status(500).send(err);
