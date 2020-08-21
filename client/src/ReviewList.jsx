@@ -36,7 +36,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
   // When sort is changed it sorts the current reviews
   useEffect(() => {
     const sortReviews = [...reviews]
-      .sort((a, b) => ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike)));
+      .sort((b, a) => ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike)));
     setReviews(sortReviews.reverse());
   }, [sort]);
 
