@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from './search.jsx';
 import ReviewList from './ReviewList.jsx';
+import searchLogo from '../assets/imgs/searchLogo.png';
 import {
   MyButton,
   Background,
@@ -41,7 +42,7 @@ function HomePage() {
     <div>
       <div>
         <Background>
-          <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/search-analytics-2430636-2057253.png" width="10%" height="10%" alt="logo" />
+          <img src={searchLogo} width="10%" height="10%" alt="logo" />
           <h2 style={logoTitle}>
             Harbinger
           </h2>
