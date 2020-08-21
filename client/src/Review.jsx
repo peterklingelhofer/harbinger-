@@ -42,7 +42,7 @@ const TextBox = styled(Box)({
   maxWidth: '700px',
   marginLeft: '50px',
   marginBottom: '30px',
-  positon: 'absolute',
+  position: 'absolute',
   padding: '12px',
   display: 'inline-block',
 });
@@ -63,7 +63,6 @@ const KeywordBox = styled(Box)({
   marginLeft: '200px',
   borderRadius: 2,
   color: 'blue',
-  width: 'max-content',
   fontFamily: 'arial',
   fontWeight: 'bold',
 });
@@ -141,7 +140,6 @@ const Review = ({ info, passTagClick }) => {
             <div
               style={{
                 marginTop: '3px',
-                cursor: 'pointer',
                 fontSize: '14px',
                 textDecoration: 'underline',
                 fontWeight: 'normal',
