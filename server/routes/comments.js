@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { saveReviewComments, getReviewComments } = require('../db/database');
+const { saveReviewComments, getReviewComments, getUserById } = require('../db/database');
 
 const reviewComments = Router();
 
@@ -16,7 +16,16 @@ reviewComments.post('/comments', (req, res) => {
   const { message, UserId, ReviewId } = req.body;
   saveReviewComments(message, UserId, ReviewId)
     .then((savedComment) => {
-      res.send(savedComment);
+      // res.send(savedComment);
+      getUserById(UserId)
+        .then((user) => {
+          savedComment.User = user;
+          // console.log(savedComment.User);
+          res.send({ savedComment, user });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     })
     .catch((error) => {
       res.status(500);
