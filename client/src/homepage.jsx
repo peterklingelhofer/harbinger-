@@ -42,9 +42,9 @@ function HomePage() {
     <div>
       <div>
         <Background>
-          <img src={searchLogo} width="10%" height="10%" alt="logo" />
+          <img src={searchLogo} width="30%" height="30%" alt="logo" />
           <h2 style={logoTitle}>
-            Harbinger
+            {/* Harbinger */}
           </h2>
           <img alt="user" src={user.image} style={userPictureStyle} />
           <Link to="/me">
