@@ -276,6 +276,8 @@ const saveUsers = (username, serial, bio, image) => Users.findOne({ where: { ser
 
 const getUser = (id) => Users.findOne({ where: { serial: id } });
 
+const getUserById = (id) => Users.findOne({ where: { id }, raw: true });
+
 //NOT USED
 const getUserReviews = (userId) => new Promise((resolve, reject) => {
   Review.findAll({ where: {}, include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }] })
@@ -404,6 +406,7 @@ const getWebUrls = (webIds) => WebUrls.findAll({
 module.exports = {
   db,
   getUser,
+  getUserById,
   getReviewComments,
   saveUsers,
   saveOrFindKeyWord,
