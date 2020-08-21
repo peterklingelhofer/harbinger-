@@ -38,7 +38,6 @@ const ReviewList = ({ userId, userId4Comments }) => {
     const sortReviews = [...reviews]
       .sort((a, b) => ((+b.likes) - (+b.dislike)) - ((+a.likes) - (+a.dislike)));
     setReviews(sortReviews.reverse());
-    console.log(sortReviews.reverse());
   }, [sort]);
 
   // Gets the reviews by the given tag
@@ -61,14 +60,25 @@ const ReviewList = ({ userId, userId4Comments }) => {
     searchByTag(tag);
   };
 
+  // function to append new comments to displayComment component
+  const appendComment = (comment, ReviewIndex) => {
+    const updatedReviews = [...reviews];
+    const updatedReview = { ...updatedReviews[ReviewIndex] };
+    const updatedComments = [...updatedReview.Comment];
+    updatedComments.unshift(comment);
+    updatedReview.Comment = updatedComments;
+    updatedReviews[ReviewIndex] = updatedReview;
+    setReviews(updatedReviews);
+  };
+
   return (
     <div>
-      {!reviews.length ? 'loading' : reviews.map((item) => (
+      {!reviews.length ? 'loading' : reviews.map((item, index) => (
         <div key={item.id}>
           <Review info={item} passTagClick={onTagClick} />
           <br />
-          <DisplayComment />
-          <MakeComment userId4Comments={userId4Comments} ReviewId={item.id} />
+          <DisplayComment comments={item.Comment} />
+          <MakeComment ReviewIndex={index} appendComment={appendComment} userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
     </div>

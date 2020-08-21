@@ -7,43 +7,24 @@ import axios from 'axios';
  * in the Comments table of the db.
  * Review comments are displayed inside of the user website review they are linked with.
  */
-const DisplayComment = () => {
-  const [comments, setComments] = useState([]);
-
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: '/review/comments',
-    })
-      .then(({ data }) => {
-        console.log(data);
-        setComments(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-
-  return (
-    <div>
-      <h3>User Review Comments</h3>
-      {!comments.length ? 'no review comments yet' : comments.map((comment) => (
-        <div
-          style={{
-            borderStyle: 'ridge',
-            borderColor: 'grey',
-            maxWidth: '1000px',
-            paddingLeft: '10px',
-          }}
-          key={comment.id}
-        >
-          <img src={comment.Review.photourl} alt="Can't load file" width="100" height="100" />
-          <figcaption style={{ fontWeight: 'bold' }}>{comment.User.username}</figcaption>
-          <p style={{ fontFamily: 'Arial' }}>{comment.message}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-
+const DisplayComment = ({ comments }) => (
+  <div>
+    <h3>User Review Comments</h3>
+    {!comments.length ? 'no review comments yet' : comments.reverse().map((comment) => (
+      <div
+        style={{
+          borderStyle: 'ridge',
+          borderColor: 'grey',
+          maxWidth: '1000px',
+          paddingLeft: '10px',
+        }}
+        key={comment.id}
+      >
+        <img src={comment.User.image} alt="Can't load file" width="100" height="100" />
+        <figcaption style={{ fontWeight: 'bold' }}>{comment.User.username}</figcaption>
+        <p style={{ fontFamily: 'Arial' }}>{comment.message}</p>
+      </div>
+    ))}
+  </div>
+);
 export default DisplayComment;
