@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from './search.jsx';
+import KeywordSearch from './KeywordSearch';
 import ReviewList from './ReviewList.jsx';
 import searchLogo from '../assets/imgs/searchLogo.png';
 import {
@@ -56,6 +57,7 @@ function HomePage() {
         </Background>
       </div>
       <Search />
+      <KeywordSearch />
       <Background style={{ marginLeft: '600px' }}>
         <h2>Top Best Reviews</h2>
       </Background>

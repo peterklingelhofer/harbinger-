@@ -261,7 +261,7 @@ function Reviews(props) {
             Keywords help other users find other reviews associated with what
             they're searching!
           </div>
-          <input id="keyword" type="text" placeholder="leave a keyword" />
+          <input id="keyword" type="text" placeholder="enter keywords separated by commas" style={{ width: '250px' }} />
           <br />
           <PhotoUpload changeHandler={fileChangeHandler} file={file} />
           <button style={{ marginBottom: '50px' }}>

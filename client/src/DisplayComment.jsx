@@ -10,7 +10,7 @@ import axios from 'axios';
 const DisplayComment = ({ comments }) => (
   <div>
     <h3>User Review Comments</h3>
-    {!comments.length ? 'no review comments yet' : comments.reverse().map((comment) => (
+    {!comments.length ? 'no review comments yet' : comments.map((comment) => (
       <div
         style={{
           borderStyle: 'ridge',

@@ -11,7 +11,7 @@ const handleClick = (tag) => {
     <div id={keyword}
       tabIndex="0"
       onClick={(e) => {handleClick(e.target.id)}}
-      onKeyDown={(e) => { if (e.keyCode === 13 || e.keyCode === 32) {handleClick(e.target.id)} }}
+      onKeyDown={(e) => { if (e.keyCode === 13 || e.keyCode === 32) {handleClick(e.target.id)}; }}
       style={{ width: 'max-content', cursor: 'pointer' }}>
       {keyword}
     </div>
