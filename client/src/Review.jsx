@@ -42,7 +42,7 @@ const TextBox = styled(Box)({
   maxWidth: '700px',
   marginLeft: '50px',
   marginBottom: '30px',
-  positon: 'absolute',
+  position: 'absolute',
   padding: '12px',
   display: 'inline-block',
 });
