@@ -12,6 +12,7 @@ import {
   DisLikeBG,
   TitleBox,
 } from "../styles";
+import Review from './Review';
 
 function KeywordSearch() {
   const searchByKeyword = (query) => {
@@ -27,41 +28,29 @@ function KeywordSearch() {
     };
     return axios(config)
       .then((response) => {
-        // console.log(JSON.stringify(response));
-        // console.log(JSON.stringify(response.data[1]), 'THIS IS DATA');
-        // console.log(JSON.stringify(response.data));
-        // console.log(JSON.stringifyresponse.data.webPages.value));
-        console.log(response.data);
-        webSitesUpdate(response.data[0].webPages.value);
-        if (response.data[1] !== null) {
-          let fullReviews = [];
-          response.data[1].forEach((review, index) => {
-            review.webUrl = response.data[2][index];
-            fullReviews.push(review);
-          })
-          reviewedSitesUpdate(fullReviews);
-        } else {
-          reviewedSitesUpdate([]);
-        }
+        console.log('RESPONSE IN KEYWORD SEARCH: ', response);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const [webSites, webSitesUpdate] = useState([]);
-  const [reviewedSites, reviewedSitesUpdate] = useState([]);
 
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
-    searchBing(data);
+  // const [reviews, setReviews] = useState([]);
+
+
+  const handleSubmit = (data) => {
+    console.log('KEYWORD SEARCH VALUE: ', data);
   };
 
   return (
     <div>
-      <div style={{ textAlign: 'center', verticalAlign: '-20px' }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <div style={{
+        textAlign: 'center', verticalAlign: '-20px', marginLeft: '15.5px', marginBottom: '8px', marginTop: '5px',
+      }}
+      >
+        <form onSubmit={handleSubmit}>
           <label>Search Reviews by Tag:</label>
-          <input ref={register} name="clientSearch" />
+          <input ref={Review} name="tagSearch" />
           <button><MyButton>Search Reviews</MyButton></button>
         </form>
       </div>

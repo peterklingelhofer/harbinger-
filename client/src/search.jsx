@@ -58,7 +58,7 @@ function Search() {
 
   return (
     <div>
-      <div style={{ textAlign: 'center', verticalAlign: '-20px' }}>
+      <div style={{ textAlign: 'center', verticalAlign: '-20px', marginTop: '8px' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Search Websites to Review:</label>
           <input ref={register} name="clientSearch" />
