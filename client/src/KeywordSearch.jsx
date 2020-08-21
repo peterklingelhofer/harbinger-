@@ -15,28 +15,27 @@ import {
 import Review from './Review';
 
 function KeywordSearch() {
-  const searchByKeyword = (query) => {
-    const data = JSON.stringify(query);
+  // const searchByKeyword = (query) => {
+  //   const data = JSON.stringify(query);
 
-    const config = {
-      method: 'get',
-      url: '/api/websites/search',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
-    };
-    return axios(config)
-      .then((response) => {
-        console.log('RESPONSE IN KEYWORD SEARCH: ', response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //   const config = {
+  //     method: 'get',
+  //     url: '/api/websites/search',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     data,
+  //   };
+  //   return axios(config)
+  //     .then((response) => {
+  //       console.log('RESPONSE IN KEYWORD SEARCH: ', response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   // const [reviews, setReviews] = useState([]);
-
 
   const handleSubmit = (data) => {
     console.log('KEYWORD SEARCH VALUE: ', data);
@@ -50,12 +49,12 @@ function KeywordSearch() {
       >
         <form onSubmit={handleSubmit}>
           <label>Search Reviews by Tag:</label>
-          <input ref={Review} name="tagSearch" />
+          <input name="tagSearch" />
           <button><MyButton>Search Reviews</MyButton></button>
         </form>
       </div>
     </div>
   );
 }
-
+// ref={Review} ...from <input
 export default KeywordSearch;
