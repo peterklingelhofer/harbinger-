@@ -65,7 +65,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
     const updatedReviews = [...reviews];
     const updatedReview = { ...updatedReviews[ReviewIndex] };
     const updatedComments = [...updatedReview.Comment];
-    updatedComments.unshift(comment);
+    updatedComments.push(comment);
     updatedReview.Comment = updatedComments;
     updatedReviews[ReviewIndex] = updatedReview;
     setReviews(updatedReviews);
