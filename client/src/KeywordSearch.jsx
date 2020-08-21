@@ -7,10 +7,6 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {
   MyButton,
-  WebBG,
-  LikeBG,
-  DisLikeBG,
-  TitleBox,
 } from "../styles";
 import Review from './Review';
 
@@ -39,6 +35,7 @@ function KeywordSearch() {
 
   const handleSubmit = (data) => {
     console.log('KEYWORD SEARCH VALUE: ', data);
+
   };
 
   return (
@@ -47,8 +44,8 @@ function KeywordSearch() {
         textAlign: 'center', verticalAlign: '-20px', marginLeft: '15.5px', marginBottom: '8px', marginTop: '5px',
       }}
       >
-        <form onSubmit={handleSubmit}>
-          <label>Search Reviews by Tag:</label>
+        <form onSubmit={(e) => { handleSubmit(e); }}>
+          <label>Search Reviews by Tag: </label>
           <input name="tagSearch" />
           <button><MyButton>Search Reviews</MyButton></button>
         </form>
