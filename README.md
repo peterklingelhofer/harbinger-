@@ -1,3 +1,5 @@
+![🔎](https://github.com/SeniorTrails/harbinger-/raw/master/client/assets/imgs/searchLogo.png)
+
 # harbinger-
 
 Upvote and comment on your favorite websites!
