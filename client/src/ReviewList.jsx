@@ -4,6 +4,7 @@ import axios from 'axios';
 import Review from './Review.jsx';
 import MakeComment from './MakeComment.jsx';
 import DisplayComment from './DisplayComment.jsx';
+import KeywordSearch from './KeywordSearch';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -72,8 +73,10 @@ const ReviewList = ({ userId, userId4Comments }) => {
   };
 
   return (
+    <>
+    <KeywordSearch passTagClick={onTagClick} />
     <div>
-      {!reviews.length ? 'loading' : reviews.map((item, index) => (
+      {!reviews.length ? 'No reviews to show.' : reviews.map((item, index) => (
         <div key={item.id}>
           <Review info={item} passTagClick={onTagClick} />
           <br />
@@ -82,6 +85,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 

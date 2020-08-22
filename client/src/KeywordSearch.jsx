@@ -10,7 +10,7 @@ import {
 } from "../styles";
 import Review from './Review';
 
-function KeywordSearch() {
+function KeywordSearch({ passTagClick }) {
   // const searchByKeyword = (query) => {
   //   const data = JSON.stringify(query);
 
@@ -31,11 +31,11 @@ function KeywordSearch() {
   //     });
   // };
 
-  // const [reviews, setReviews] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
 
-  const handleSubmit = (data) => {
-    console.log('KEYWORD SEARCH VALUE: ', data);
-
+  const onSubmit = (data) => {
+    passTagClick(data.tag);
+    reset();
   };
 
   return (
@@ -44,9 +44,9 @@ function KeywordSearch() {
         textAlign: 'center', verticalAlign: '-20px', marginLeft: '15.5px', marginBottom: '8px', marginTop: '5px',
       }}
       >
-        <form onSubmit={(e) => { handleSubmit(e); }}>
+        <form onSubmit={handleSubmit((d) => onSubmit(d))}>
           <label>Search Reviews by Tag: </label>
-          <input name="tagSearch" />
+          <input name="tag" ref={register} />
           <button><MyButton>Search Reviews</MyButton></button>
         </form>
       </div>

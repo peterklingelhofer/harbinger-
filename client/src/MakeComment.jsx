@@ -22,6 +22,7 @@ const MakeComment = ({ userId4Comments, ReviewId, ReviewIndex, appendComment }) 
         const { savedComment, user } = data;
           savedComment.User = user;
         appendComment(savedComment, ReviewIndex);
+        setValue('');
       })
       .catch((err) => {
         console.error(err);
