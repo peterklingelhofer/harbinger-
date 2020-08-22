@@ -258,8 +258,7 @@ function Reviews(props) {
             <Rating checkRating={checkRating} />
           </div>
           <div>
-            Keywords help other users find other reviews associated with what
-            they're searching!
+            Add keywords/tags to help users find reviews!
           </div>
           <input id="keyword" type="text" placeholder="enter keywords separated by commas" style={{ width: '250px' }} />
           <br />

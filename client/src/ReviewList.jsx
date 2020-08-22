@@ -5,6 +5,9 @@ import Review from './Review.jsx';
 import MakeComment from './MakeComment.jsx';
 import DisplayComment from './DisplayComment.jsx';
 import KeywordSearch from './KeywordSearch';
+import {
+  MyButton,
+} from "../styles";
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -15,6 +18,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
   const [reviews, setReviews] = useState([]);
   // Calls the sorting useEffect, call setSort([]) when you want to sort
   const [sort, setSort] = useState([]);
+  const [reload, setReload] = useState([]);
 
   // Initially gets all the reviews
   useEffect(() => {
@@ -32,7 +36,7 @@ const ReviewList = ({ userId, userId4Comments }) => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [reload]);
 
   // When sort is changed it sorts the current reviews
   useEffect(() => {
@@ -45,7 +49,6 @@ const ReviewList = ({ userId, userId4Comments }) => {
   const searchByTag = (tagObject) => {
     axios({
       method: 'get',
-      // url: `/review/keywords/${tag}/${userId}`,
       url: '/review/keywords',
       params: tagObject,
     })
@@ -74,20 +77,52 @@ const ReviewList = ({ userId, userId4Comments }) => {
     setReviews(updatedReviews);
   };
 
+  // calls reload to clear keyword search filter
+  const handleReset = () => {
+    setReload([]);
+  };
+
   return (
-    <>
-      <KeywordSearch passTagClick={onTagClick} userId={userId} />
     <div>
-      {!reviews.length ? 'No reviews to show.' : reviews.map((item, index) => (
-        <div key={item.id}>
-          <Review info={item} passTagClick={onTagClick} userId={userId} />
-          <br />
-          <DisplayComment comments={item.Comment} />
-          <MakeComment ReviewIndex={index} appendComment={appendComment} userId4Comments={userId4Comments} ReviewId={item.id} />
+      <div style={{
+        marginTop: '20px',
+      }}
+      >
+        <KeywordSearch passTagClick={onTagClick} userId={userId} />
+        <div style={{
+          textAlign: 'right',
+          verticalAlign: '-20px',
+          marginLeft: '15.5px',
+          marginBottom: '8px',
+          marginTop: '5px',
+        }}
+        >
+          <button
+            onClick={handleReset}
+            onKeyDown={(e) => { if (e.keyCode === 13 || e.keyCode === 32) {handleReset(e.target.id)}; }}
+          >
+            <MyButton>
+              clear search
+            </MyButton>
+          </button>
         </div>
-      ))}
+      </div>
+      <div>
+        {!reviews.length ? 'No reviews to show.' : reviews.map((item, index) => (
+          <div key={item.id}>
+            <Review info={item} passTagClick={onTagClick} userId={userId} />
+            <br />
+            <DisplayComment comments={item.Comment} />
+            <MakeComment
+              ReviewIndex={index}
+              appendComment={appendComment}
+              userId4Comments={userId4Comments}
+              ReviewId={item.id}
+            />
+          </div>
+        ))}
     </div>
-    </>
+    </div>
   );
 };
 
