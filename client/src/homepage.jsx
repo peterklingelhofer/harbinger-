@@ -57,7 +57,6 @@ function HomePage() {
         </Background>
       </div>
       <Search />
-      <KeywordSearch />
       <Background style={{ marginLeft: '600px' }}>
         <h2>Top Best Reviews</h2>
       </Background>

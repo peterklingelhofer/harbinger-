@@ -4,6 +4,7 @@ import axios from 'axios';
 import Review from './Review.jsx';
 import MakeComment from './MakeComment.jsx';
 import DisplayComment from './DisplayComment.jsx';
+import KeywordSearch from './KeywordSearch';
 
 /**
  * A component for holding a list of the reviews. It makes the database call and
@@ -41,10 +42,12 @@ const ReviewList = ({ userId, userId4Comments }) => {
   }, [sort]);
 
   // Gets the reviews by the given tag
-  const searchByTag = (tag) => {
+  const searchByTag = (tagObject) => {
     axios({
       method: 'get',
-      url: `/review/retrieve/${tag}`,
+      // url: `/review/keywords/${tag}/${userId}`,
+      url: '/review/keywords',
+      params: tagObject,
     })
       .then(({ data }) => {
         setReviews(data);
@@ -56,8 +59,8 @@ const ReviewList = ({ userId, userId4Comments }) => {
   };
 
   // Calls the search by tag
-  const onTagClick = (tag) => {
-    searchByTag(tag);
+  const onTagClick = (tagObject) => {
+    searchByTag(tagObject);
   };
 
   // function to append new comments to displayComment component
@@ -72,16 +75,19 @@ const ReviewList = ({ userId, userId4Comments }) => {
   };
 
   return (
+    <>
+      <KeywordSearch passTagClick={onTagClick} userId={userId} />
     <div>
-      {!reviews.length ? 'loading' : reviews.map((item, index) => (
+      {!reviews.length ? 'No reviews to show.' : reviews.map((item, index) => (
         <div key={item.id}>
-          <Review info={item} passTagClick={onTagClick} />
+          <Review info={item} passTagClick={onTagClick} userId={userId} />
           <br />
           <DisplayComment comments={item.Comment} />
           <MakeComment ReviewIndex={index} appendComment={appendComment} userId4Comments={userId4Comments} ReviewId={item.id} />
         </div>
       ))}
     </div>
+    </>
   );
 };
 

@@ -226,9 +226,9 @@ const saveReviewComments = (message, idUser, idReview) => Comment.create({
 /**
  * Database helper to find reviews by keyword
  */
-const findArticleByKeyWord = (keyword) => Keyword.findAll({
+const findArticleByKeyWord = (keywordObj) => Keyword.findAll({
   where: {
-    keyword,
+    keyword: keywordObj.keyword,
   },
 })
   .then((data) => {
@@ -236,10 +236,10 @@ const findArticleByKeyWord = (keyword) => Keyword.findAll({
       console.log('KEYWORD NOT FOUND');
     } else {
       const id = data.map((result) => result.dataValues.ReviewId);
+      const userId = keywordObj.userId;
+      const where = !userId ? { id } : { userId, id };
       return Review.findAll({
-        where: {
-          id,
-        },
+        where ,
         include: [{ model: Users, as: 'User' }, { model: WebUrls, as: 'WebUrl' }, { model: Keyword, as: 'keywords' }, { model: Comment, as: 'Comment', include: [{ model: Users, as: 'User' }] }],
         order: [
           ['keywords', 'keyword'],

@@ -7,38 +7,19 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import {
   MyButton,
-  WebBG,
-  LikeBG,
-  DisLikeBG,
-  TitleBox,
 } from "../styles";
 import Review from './Review';
 
-function KeywordSearch() {
-  // const searchByKeyword = (query) => {
-  //   const data = JSON.stringify(query);
+function KeywordSearch({ passTagClick, userId }) {
 
-  //   const config = {
-  //     method: 'get',
-  //     url: '/api/websites/search',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     data,
-  //   };
-  //   return axios(config)
-  //     .then((response) => {
-  //       console.log('RESPONSE IN KEYWORD SEARCH: ', response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const { register, handleSubmit, reset } = useForm();
 
-  // const [reviews, setReviews] = useState([]);
-
-  const handleSubmit = (data) => {
-    console.log('KEYWORD SEARCH VALUE: ', data);
+  const onSubmit = (data) => {
+    passTagClick({
+      keyword: data.tag,
+      userId,
+    });
+    reset();
   };
 
   return (
@@ -47,14 +28,14 @@ function KeywordSearch() {
         textAlign: 'center', verticalAlign: '-20px', marginLeft: '15.5px', marginBottom: '8px', marginTop: '5px',
       }}
       >
-        <form onSubmit={handleSubmit}>
-          <label>Search Reviews by Tag:</label>
-          <input name="tagSearch" />
+        <form onSubmit={handleSubmit((d) => onSubmit(d))}>
+          <label>Search Reviews by Tag: </label>
+          <input name="tag" ref={register} />
           <button><MyButton>Search Reviews</MyButton></button>
         </form>
       </div>
     </div>
   );
 }
-// ref={Review} ...from <input
+
 export default KeywordSearch;

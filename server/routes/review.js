@@ -36,9 +36,15 @@ reviewRoute.post('/url', (req, res) => {
 });
 
 // Keyword is the keyword to search by
-reviewRoute.get('/retrieve/:keyword', (req, res) => {
-  const { keyword } = req.params;
-  findArticleByKeyWord(keyword)
+reviewRoute.get('/keywords', (req, res) => {
+  // const { keyword, userId } = req.params;
+  // const keywordObj = {
+  //   keyword,
+  //   userId,
+  // };
+  console.log('REQ.QUERY: ', req.query);
+  const keywordObj = req.query;
+  findArticleByKeyWord(keywordObj)
     .then((data) => {
       res.status(200).send(data);
     })
@@ -100,8 +106,12 @@ reviewRoute.post('/submit', (req, res) => {
             .map((chunk) => {
               return chunk.trim();
             })
-            .filter((string) => {
-              return string.match(/^[a-zA-Z ]+$/);
+            .filter((string, i, self) => {
+              if (string.match(/^[a-zA-Z ]+$/)) {
+                if (string.length < 31) {
+                  return self.indexOf(string) === i;
+                }
+              }
             })
             .slice(0, 10);
           const saveKeywords = keywords.map((keyword) => {
