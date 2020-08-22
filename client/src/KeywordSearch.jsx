@@ -10,31 +10,15 @@ import {
 } from "../styles";
 import Review from './Review';
 
-function KeywordSearch({ passTagClick }) {
-  // const searchByKeyword = (query) => {
-  //   const data = JSON.stringify(query);
-
-  //   const config = {
-  //     method: 'get',
-  //     url: '/api/websites/search',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     data,
-  //   };
-  //   return axios(config)
-  //     .then((response) => {
-  //       console.log('RESPONSE IN KEYWORD SEARCH: ', response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+function KeywordSearch({ passTagClick, userId }) {
 
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
-    passTagClick(data.tag);
+    passTagClick({
+      keyword: data.tag,
+      userId,
+    });
     reset();
   };
 
@@ -53,5 +37,5 @@ function KeywordSearch({ passTagClick }) {
     </div>
   );
 }
-// ref={Review} ...from <input
+
 export default KeywordSearch;

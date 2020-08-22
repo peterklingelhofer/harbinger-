@@ -71,7 +71,7 @@ const KeywordBox = styled(Box)({
  * A component to display an individual review
  * @param {Object} info { title, likes, dislikes, text, User, WebUrl }
  */
-const Review = ({ info, passTagClick }) => {
+const Review = ({ info, passTagClick, userId }) => {
   const continueTagClick = (tag) => {
     passTagClick(tag);
   };
@@ -146,7 +146,11 @@ const Review = ({ info, passTagClick }) => {
               }}
             >
               {info.keywords.map((item) => (
-                <Keyword key={item.KeywordId} keyword={item.keyword} handleTagClick={continueTagClick} />
+                <Keyword
+                  key={item.KeywordId}
+                  keyword={item.keyword}
+                  handleTagClick={continueTagClick}
+                  userId={userId} />
               ))}
             </div>
           </KeywordBox>

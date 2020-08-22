@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 
-export default function Keyword ({ keyword, handleTagClick }) {
-
-const handleClick = (tag) => {
-  handleTagClick(tag);
-};
+export default function Keyword ({ keyword, handleTagClick, userId }) {
+  const handleClick = (tag) => {
+    const tagObject = {
+      keyword: tag,
+      userId,
+    };
+    handleTagClick(tagObject);
+  };
 
   return (
     <div id={keyword}
